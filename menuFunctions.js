@@ -20,5 +20,14 @@ module.exports = {
   },
   previousPage: function(menuItem, browserWindow) {
     browserWindow.webContents.send('prevPage');
+  },
+  increaseFontSize: function(menuItem, browserWindow) {
+    browserWindow.webContents.send('increaseFont');
+  },
+  decreaseFontSize: function(menuItem, browserWindow) {
+    browserWindow.webContents.send('decreaseFont');
+  },
+  restoreDefaultFontSize: function(menuItem, browserWindow) {
+    browserWindow.webContents.send('restoreFont');
   }
 }

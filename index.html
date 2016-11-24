@@ -16,9 +16,15 @@
         </div>
         <script>
          const {ipcRenderer, remote} = require('electron');
+         const DEFAULT_FONT_SIZE = 18;
+
+         let currentFontSize = DEFAULT_FONT_SIZE;
          
          const Book = ePub({
-             restore: true
+             restore: true,
+             styles: {
+                 "font-size": DEFAULT_FONT_SIZE + "px"
+             }
          });
 
          ipcRenderer.on('loadBook', (event, bookPath) => {
@@ -32,6 +38,21 @@
 
          ipcRenderer.on('nextPage', () => {
              Book.nextPage();
+         });
+
+         ipcRenderer.on('increaseFont', () => {
+             currentFontSize += 2;
+             Book.setStyle("font-size", currentFontSize + "px");
+         });
+
+         ipcRenderer.on('decreaseFont', () => {
+             currentFontSize -= 2;
+             Book.setStyle("font-size", currentFontSize + "px");
+         });
+
+         ipcRenderer.on('restoreFont', () => {
+             currentFontSize = DEFAULT_FONT_SIZE;
+             Book.setStyle("font-size", currentFontSize + "px");
          });
 
          const win = remote.getCurrentWindow();

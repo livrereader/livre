@@ -40,6 +40,21 @@ const menuTemplate = [
         label: 'Previous Page',
         accelerator: 'Left',
         click: menuFunctions.previousPage
+      },
+      {
+        label: 'Increase Font Size',
+        accelerator: 'Control+=',
+        click: menuFunctions.increaseFontSize
+      },
+      {
+        label: 'Decrease Font Size',
+        accelerator: 'Control+-',
+        click: menuFunctions.decreaseFontSize
+      },
+      {
+        label: 'Restore Default Font Size',
+        accelerator: 'Control+0',
+        click: menuFunctions.restoreDefaultFontSize
       }
     ]
   },
@@ -51,15 +66,6 @@ const menuTemplate = [
       },
       {
         role: 'togglefullscreen'
-      },
-      {
-        role: 'zoomin'
-      },
-      {
-        role: 'zoomout'
-      },
-      {
-        role: 'resetzoom'
       }
     ]
   }
