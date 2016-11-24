@@ -1,18 +1,14 @@
+const electron = require('electron');
 const {
     app,
     BrowserWindow,
     Menu
-} = require('electron');
+} = electron;
 const path = require('path');
 const url = require('url');
 const menuFunctions = require('./menuFunctions');
 
 let win;
-
-const windowOptions = {
-  width: 1600,
-  height: 900
-}
 
 const menuTemplate = [
   {
@@ -75,6 +71,13 @@ function createWindow() {
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 
+  const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+  
+  const windowOptions = {
+    width: width,
+    height: height
+  }
+  
   win = new BrowserWindow(windowOptions);
 
   win.loadURL(url.format({

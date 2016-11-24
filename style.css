@@ -1,7 +1,3 @@
-body {
-    height: 880px;
-}
-
 #app {
     display: flex;
     width: 100%;
@@ -11,7 +7,7 @@ body {
 
 #book {
     width: 80%;
-    height: 90%;
+    height: 80%;
     margin: auto;
 }
 
