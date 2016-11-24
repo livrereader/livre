@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Livre</title>
+        <link rel="stylesheet" href="./lib/font-awesome-4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script type="text/javascript" src="./node_modules/epub.js/build/epub.min.js"></script>
+        <script type="text/javascript" src="./node_modules/epub.js/build/libs/zip.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <i id="page-left" class="fa fa-chevron-left arrow" onclick="Book.prevPage();"></i>
+            <div id="book"></div>
+            <i id="page-right" class="fa fa-chevron-right arrow" onclick="Book.nextPage();"></i>
+        </div>
+        <script>
+         const {ipcRenderer, remote} = require('electron');
+         
+         const Book = ePub({
+             restore: true
+         });
+
+         ipcRenderer.on('loadBook', (event, bookPath) => {
+             Book.open(bookPath);
+             Book.renderTo("book");
+         });
+
+         ipcRenderer.on('prevPage', () => {
+             Book.prevPage();
+         });
+
+         ipcRenderer.on('nextPage', () => {
+             Book.nextPage();
+         });
+
+         const win = remote.getCurrentWindow();
+         win.on('resize', () => {
+             document.body.style.height = win.getSize()[1] - 20 + "px";
+         });
+        </script>
+    </body>
+</html>

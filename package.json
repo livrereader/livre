@@ -1,0 +1,19 @@
+{
+  "name": "livre",
+  "version": "0.0.0",
+  "description": "An ebook reader written with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "url": "git@github.com:jdormit/livre.git",
+    "type": "git"
+  },
+  "author": "Jeremy Dormitzer <jeremy.dormitzer@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.4.9",
+    "epub.js": "^0.2.15"
+  }
+}
