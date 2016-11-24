@@ -11,13 +11,44 @@
     <body>
         <div id="app">
             <i id="page-left" class="fa fa-chevron-left arrow" onclick="Book.prevPage();"></i>
-            <div id="book"></div>
+            <div id="book">
+                <h1 class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</h1>
+            </div>
             <i id="page-right" class="fa fa-chevron-right arrow" onclick="Book.nextPage();"></i>
         </div>
         <script>
          const {ipcRenderer, remote} = require('electron');
+         const {dialog} = remote;
          const DEFAULT_FONT_SIZE = 18;
 
+         const loadBook = function(bookPath) {
+            const $book = document.getElementById('book');
+            $book.innerHTML = "";
+            Book.open(bookPath);
+            Book.renderTo($book);
+         }
+
+         const win = remote.getCurrentWindow();
+         document.body.style.height = win.getSize()[1] - 20 + "px";
+         win.on('resize', () => {
+            document.body.style.height = win.getSize()[1] - 20 + "px";
+         });
+
+         const openDialogOptions = {
+            filters: [
+            {name: "eBooks", extensions: ['epub']}
+            ],
+            properties: ['openFile']
+         };
+            
+         const loadBookDialog = function() {
+             dialog.showOpenDialog(win, openDialogOptions, (bookPaths) => {
+                 if (bookPaths) {
+                     loadBook(bookPaths[0]);
+                 }
+             });
+         }
+         
          let currentFontSize = DEFAULT_FONT_SIZE;
          
          const Book = ePub({
@@ -28,8 +59,7 @@
          });
 
          ipcRenderer.on('loadBook', (event, bookPath) => {
-             Book.open(bookPath);
-             Book.renderTo("book");
+             loadBook(bookPath);
          });
 
          ipcRenderer.on('prevPage', () => {
@@ -53,12 +83,6 @@
          ipcRenderer.on('restoreFont', () => {
              currentFontSize = DEFAULT_FONT_SIZE;
              Book.setStyle("font-size", currentFontSize + "px");
-         });
-
-         const win = remote.getCurrentWindow();
-         document.body.style.height = win.getSize()[1] - 20 + "px";
-         win.on('resize', () => {
-             document.body.style.height = win.getSize()[1] - 20 + "px";
          });
         </script>
     </body>

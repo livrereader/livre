@@ -6,9 +6,25 @@
 }
 
 #book {
+    display: flex;
     width: 80%;
     height: 80%;
     margin: auto;
+}
+
+.no-book-message {
+    margin: auto;
+    color: #E2E2E2;
+    font-size: 60px;
+}
+
+.no-book-message:hover {
+    color: #777;
+    cursor: default;
+}
+
+.no-book-message:active {
+    color: #000;
 }
 
 .arrow {
