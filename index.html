@@ -22,25 +22,25 @@
          const DEFAULT_FONT_SIZE = 18;
 
          const loadBook = function(bookPath) {
-            const $book = document.getElementById('book');
-            $book.innerHTML = "";
-            Book.open(bookPath);
-            Book.renderTo($book);
+             const $book = document.getElementById('book');
+             $book.innerHTML = "";
+             Book.open(bookPath);
+             Book.renderTo($book);
          }
 
          const win = remote.getCurrentWindow();
          document.body.style.height = win.getSize()[1] - 20 + "px";
          win.on('resize', () => {
-            document.body.style.height = win.getSize()[1] - 20 + "px";
+             document.body.style.height = win.getSize()[1] - 20 + "px";
          });
 
          const openDialogOptions = {
-            filters: [
-            {name: "eBooks", extensions: ['epub']}
-            ],
-            properties: ['openFile']
+             filters: [
+                 {name: "eBooks", extensions: ['epub']}
+             ],
+             properties: ['openFile']
          };
-            
+         
          const loadBookDialog = function() {
              dialog.showOpenDialog(win, openDialogOptions, (bookPaths) => {
                  if (bookPaths) {
