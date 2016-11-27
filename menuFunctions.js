@@ -29,5 +29,8 @@ module.exports = {
     },
     restoreDefaultFontSize: function(menuItem, browserWindow) {
         browserWindow.webContents.send('restoreFont');
+    },
+    toggleToc: function(menuItem, browserWindow) {
+        browserWindow.webContents.send('toggleToc');
     }
 }

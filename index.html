@@ -10,15 +10,22 @@
     </head>
     <body>
         <div id="app">
-            <i id="page-left" class="fa fa-chevron-left arrow" onclick="Book.prevPage();"></i>
-            <div id="book">
-                <h1 class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</h1>
+            <div id="table-of-contents">
+                <p class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</p>
             </div>
-            <i id="page-right" class="fa fa-chevron-right arrow" onclick="Book.nextPage();"></i>
+            <div id="reader">
+                <i id="page-left" class="fa fa-chevron-left arrow" onclick="Book.prevPage();"></i>
+                <div id="book">
+                    <h1 class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</h1>
+                </div>
+                <i id="page-right" class="fa fa-chevron-right arrow" onclick="Book.nextPage();"></i>
+            </div>
         </div>
         <script>
          const {ipcRenderer, remote} = require('electron');
          const {dialog} = remote;
+         const tocBuilder = require('./tocBuilder');
+
          const DEFAULT_FONT_SIZE = 18;
 
          let Book;
@@ -36,6 +43,18 @@
 
              Book.open(bookPath);
              Book.renderTo($book);
+
+             Book.getToc().then((toc) => {
+                 const $tocEl = document.getElementById("table-of-contents");
+                 if (!toc || toc.length === 0) {
+                     $tocEl.innerHTML = "<h2>No table of contents available.</h2>";
+                 }
+                 else {
+                     $tocEl.innerHTML = "";
+                     $tocList = tocBuilder(toc, Book);
+                     $tocEl.appendChild($tocList);
+                 }
+             });
          }
 
          const win = remote.getCurrentWindow();
@@ -57,6 +76,16 @@
                      loadBook(bookPaths[0]);
                  }
              });
+         }
+
+         const toggleToc = function() {
+             const $tocEl = document.getElementById("table-of-contents");
+             if ($tocEl.style.display === "none") {
+                 $tocEl.style.display = "inline";
+             }
+             else {
+                 $tocEl.style.display = "none";
+             }
          }
          
          let currentFontSize = DEFAULT_FONT_SIZE;
@@ -86,6 +115,10 @@
          ipcRenderer.on('restoreFont', () => {
              currentFontSize = DEFAULT_FONT_SIZE;
              Book.setStyle("font-size", currentFontSize + "px");
+         });
+
+         ipcRenderer.on('toggleToc', () => {
+             toggleToc();
          });
         </script>
     </body>

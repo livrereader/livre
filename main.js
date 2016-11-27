@@ -38,6 +38,11 @@ const menuTemplate = [
                 click: menuFunctions.previousPage
             },
             {
+                label: 'Toggle Table of Contents',
+                accelerator: 'Control+t',
+                click: menuFunctions.toggleToc
+            },
+            {
                 label: 'Increase Font Size',
                 accelerator: 'Control+=',
                 click: menuFunctions.increaseFontSize
