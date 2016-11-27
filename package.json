@@ -4,7 +4,8 @@
   "description": "An ebook reader written with Electron",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . Livre --icon icon --out ./dist --overwrite"
   },
   "repository": {
     "url": "git@github.com:jdormit/livre.git",
@@ -15,5 +16,8 @@
   "dependencies": {
     "electron": "^1.4.9",
     "epub.js": "^0.2.15"
+  },
+  "devDependencies": {
+    "electron-packager": "^8.3.0"
   }
 }
