@@ -77,10 +77,13 @@ function createWindow() {
     Menu.setApplicationMenu(menu);
 
     const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+
+    const iconPath = path.join(__dirname, "icon.png");
     
     const windowOptions = {
         width: width,
-        height: height
+        height: height,
+        icon: iconPath
     }
     
     win = new BrowserWindow(windowOptions);
