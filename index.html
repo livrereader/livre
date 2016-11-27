@@ -21,9 +21,19 @@
          const {dialog} = remote;
          const DEFAULT_FONT_SIZE = 18;
 
+         let Book;
+         
          const loadBook = function(bookPath) {
+             Book = ePub({
+                 restore: true,
+                 styles: {
+                     "font-size": DEFAULT_FONT_SIZE + "px"
+                 }
+             });
+
              const $book = document.getElementById('book');
              $book.innerHTML = "";
+
              Book.open(bookPath);
              Book.renderTo($book);
          }
@@ -51,13 +61,6 @@
          
          let currentFontSize = DEFAULT_FONT_SIZE;
          
-         const Book = ePub({
-             restore: true,
-             styles: {
-                 "font-size": DEFAULT_FONT_SIZE + "px"
-             }
-         });
-
          ipcRenderer.on('loadBook', (event, bookPath) => {
              loadBook(bookPath);
          });
