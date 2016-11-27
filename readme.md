@@ -1,5 +1,5 @@
 # Livre
-## An eBook reader built on [Electron](https://electron.atom.io)
+## An eBook reader built on [Electron](http://electron.atom.io)
 
 *Livre* is a minimal eBook reader. Currently, it only support `.epub` formatted eBooks.
 
