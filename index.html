@@ -56,7 +56,18 @@
                          persistedData = {};
                      }
                      if (!persistedData[id]) {
-                         persistedData[id] = {};
+                         persistedData[id] = {
+                             title: metadata.bookTitle,
+                             href: bookPath
+                         };
+                     }
+                     else {
+                         if (!persistedData[id].href || persistedData[id].href !== bookPath) {
+                             persistedData[id].href = bookPath;
+                         }
+                         if (!persistedData[id].title || persistedData[id].title !== metadata.bookTitle) {
+                             persistedData[id].title = metadata.bookTitle;
+                         }
                      }
                      if (persistedData[id].currentLocation) {
                          Book.settings.previousLocationCfi = persistedData[id].currentLocation;
