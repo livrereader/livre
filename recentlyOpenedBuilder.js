@@ -5,7 +5,6 @@ module.exports = function(persistedData, openBookFunction) {
     }
     for (let id in persistedData) {
         let book = persistedData[id];
-        console.log(book);
         let $bookItem = document.createElement("li");
         let $bookItemText = document.createTextNode(book.title);
         $bookItem.appendChild($bookItemText);
