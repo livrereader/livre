@@ -132,7 +132,7 @@
 
          const toggleToc = function() {
              const $tocEl = document.getElementById("table-of-contents");
-             if ($tocEl.style.display === "none") {
+             if ($tocEl.style.display === "none" || $tocEl.style.display === "") {
                  $tocEl.style.display = "inline";
              }
              else {
