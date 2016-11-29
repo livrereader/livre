@@ -2,13 +2,18 @@ const electron = require('electron');
 const {
     app,
     BrowserWindow,
-    Menu
+    Menu,
+    ipcMain
 } = electron;
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
 const menuFunctions = require('./menuFunctions');
+const loadPersistedData = require('./dataPersistance');
 
 let win;
+
+const DATA_FILE_PATH = path.join(app.getPath("userData"), "data.json");
 
 const menuTemplate = [
     {
@@ -72,7 +77,7 @@ const menuTemplate = [
     }
 ];
 
-function createWindow() {
+function createWindow(bookData) {
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
@@ -94,12 +99,48 @@ function createWindow() {
         slashes: true
     }));
 
+    if (bookData) {
+        win.webContents.on('dom-ready', function() {
+            win.webContents.send('loadPersistedData', bookData);
+        });
+    }
+
     win.on('closed', () => {
         win = null;
     })
 }
 
-app.on("ready", createWindow);
+function init() {
+    loadPersistedData(function(err, data) {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                createWindow();
+            }
+            else if (err instanceof SyntaxError) {
+                console.error("Could not read config file: invalid syntax.");
+                createWindow();
+            }
+            else {
+                throw err;
+            }
+        }
+        else {
+            createWindow(data);
+        }
+
+        ipcMain.on('persistData', function(event, bookData) {
+            const json = JSON.stringify(bookData);
+            fs.writeFile(DATA_FILE_PATH, json, 'utf8', (err) => {
+                if (err) {
+                    throw err;
+                }
+            }); 
+        });
+    });
+}
+
+app.on("ready", init);
+
 
 app.on("windows-all-closed", () => {
     if (process.platform !== 'darwin') {
@@ -109,6 +150,6 @@ app.on("windows-all-closed", () => {
 
 app.on("activate", () => {
     if (win === null) {
-        createWindow();
+        init();
     }
 });

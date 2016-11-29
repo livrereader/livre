@@ -29,10 +29,15 @@
          const DEFAULT_FONT_SIZE = 18;
 
          let Book;
-         
+         let id;
+         let persistedData;
+         let persistInterval;
+
          const loadBook = function(bookPath) {
+             if (Book && Book.destroy) {
+                 Book.destroy();
+             }
              Book = ePub({
-                 restore: true,
                  styles: {
                      "font-size": DEFAULT_FONT_SIZE + "px"
                  }
@@ -42,19 +47,49 @@
              $book.innerHTML = "";
 
              Book.open(bookPath);
-             Book.renderTo($book);
+             Book.getMetadata()
+                 .then((metadata) => {
+                     id = metadata.identifier;
+                     if (!persistedData) {
+                         persistedData = {};
+                     }
+                     if (!persistedData[id]) {
+                         persistedData[id] = {};
+                     }
+                     if (persistedData[id].currentLocation) {
+                         Book.settings.previousLocationCfi = persistedData[id].currentLocation;
+                     }
+                 })
+                 .then(() => Book.renderTo("book"))
+                 .then(() => {
+                     ipcRenderer.send('persistData', persistedData);
 
-             Book.getToc().then((toc) => {
-                 const $tocEl = document.getElementById("table-of-contents");
-                 if (!toc || toc.length === 0) {
-                     $tocEl.innerHTML = "<h2>No table of contents available.</h2>";
-                 }
-                 else {
-                     $tocEl.innerHTML = "";
-                     $tocList = tocBuilder(toc, Book);
-                     $tocEl.appendChild($tocList);
-                 }
-             });
+                     Book.on('renderer:locationChanged', function(locationCfi) {
+                         persistedData[id].currentLocation = locationCfi;
+                         ipcRenderer.send('persistData', persistedData);
+                     });
+
+                     if (persistInterval) {
+                         window.clearInterval(persistInterval);
+                     }
+
+                     persistInterval = window.setInterval(() => {
+                         ipcRenderer.send('persistData', persistedData);
+                     }, 30000);
+
+                     return Book.getToc();
+                 })
+                 .then((toc) => {
+                     const $tocEl = document.getElementById("table-of-contents");
+                     if (!toc || toc.length === 0) {
+                         $tocEl.innerHTML = "<h2>No table of contents available.</h2>";
+                     }
+                     else {
+                         $tocEl.innerHTML = "";
+                         $tocList = tocBuilder(toc, Book);
+                         $tocEl.appendChild($tocList);
+                     }
+                 });
          }
 
          const win = remote.getCurrentWindow();
@@ -89,6 +124,10 @@
          }
          
          let currentFontSize = DEFAULT_FONT_SIZE;
+
+         ipcRenderer.on('loadPersistedData', (event, data) => {
+             persistedData = data;
+         });
          
          ipcRenderer.on('loadBook', (event, bookPath) => {
              loadBook(bookPath);
