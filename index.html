@@ -16,7 +16,16 @@
             <div id="reader">
                 <i id="page-left" class="fa fa-chevron-left arrow" onclick="Book.prevPage();"></i>
                 <div id="book">
-                    <h1 class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</h1>
+                    <div id="start-page">
+                        <p class="no-book-message" onclick="loadBookDialog();">Open a new book (Ctrl-O)</p>
+                        <div id="recent-books">
+                            <hr>
+                            <p id="recent-books-label">Recent books:</p>
+                            <br>
+                            <ul id="recently-opened">
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <i id="page-right" class="fa fa-chevron-right arrow" onclick="Book.nextPage();"></i>
             </div>
@@ -25,6 +34,7 @@
          const {ipcRenderer, remote} = require('electron');
          const {dialog} = remote;
          const tocBuilder = require('./tocBuilder');
+         const recentlyOpenedBuilder = require('./recentlyOpenedBuilder');
 
          const DEFAULT_FONT_SIZE = 18;
 
@@ -129,11 +139,30 @@
                  $tocEl.style.display = "none";
              }
          }
+
+         const init = function() {
+             // Build 'recently opened' list
+             document.getElementById("recently-opened").appendChild(recentlyOpenedBuilder(persistedData, loadBook));
+
+             // Ensure correct body height
+             document.body.style.height = win.getSize()[1] - 20 + "px";
+             win.on('resize', () => {
+                 document.body.style.height = win.getSize()[1] - 20 + "px";
+             });
+
+             // Show #book
+             document.getElementById("book").style.display = "flex";
+         }
          
          let currentFontSize = DEFAULT_FONT_SIZE;
 
          ipcRenderer.on('loadPersistedData', (event, data) => {
              persistedData = data;
+             init();
+         });
+
+         ipcRenderer.on('initNoData', () => {
+             init();
          });
          
          ipcRenderer.on('loadBook', (event, bookPath) => {
@@ -165,12 +194,6 @@
 
          ipcRenderer.on('toggleToc', () => {
              toggleToc();
-         });
-
-         // Ensure correct body height
-         document.body.style.height = win.getSize()[1] - 20 + "px";
-         win.on('resize', () => {
-             document.body.style.height = win.getSize()[1] - 20 + "px";
          });
         </script>
     </body>

@@ -1,3 +1,7 @@
+html {
+    cursor: default;
+}
+
 #app {
     display: flex;
     width: 100%;
@@ -13,25 +17,58 @@
 }
 
 #book {
-    display: flex;
+    display: none;
     width: 80%;
     height: 80%;
     margin: auto;
 }
 
+#start-page {
+    margin: auto;
+}
+
+#recently-opened {
+    margin: auto;
+    color: #292929;
+    list-style-type: none;
+    font-size: 40px;
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+#recently-opened::-webkit-scrollbar {
+    display: none;
+}
+
+#recently-opened li {
+    margin: auto;
+}
+
+#recently-opened li:hover {
+    color: #777;
+}
+
+#recently-opened li:active {
+    color: #000;
+}
+
 .no-book-message {
     margin: auto;
-    color: #E2E2E2;
+    color: #292929;
     font-size: 60px;
 }
 
 .no-book-message:hover {
     color: #777;
-    cursor: default;
 }
 
 .no-book-message:active {
     color: #000;
+}
+
+#recent-books-label {
+    margin: auto;
+    font-size: 45px;
 }
 
 #table-of-contents {
@@ -44,7 +81,6 @@
 
 #table-of-contents li {
     color: black;
-    cursor: default;
 }
 
 #table-of-contents li>span:hover {

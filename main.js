@@ -104,6 +104,11 @@ function createWindow(bookData) {
             win.webContents.send('loadPersistedData', bookData);
         });
     }
+    else {
+        win.webContents.on('dom-ready', function() {
+            win.webContents.send('initNoData');
+        });
+    }
 
     win.on('closed', () => {
         win = null;
