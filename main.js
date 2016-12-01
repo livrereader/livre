@@ -43,6 +43,16 @@ const menuTemplate = [
                 click: menuFunctions.previousPage
             },
             {
+                label: 'Back',
+                accelerator: 'Alt+Left',
+                click: menuFunctions.back
+            },
+            {
+                label: 'Forward',
+                accelerator: 'Alt+Right',
+                click: menuFunctions.forward
+            },
+            {
                 label: 'Toggle Table of Contents',
                 accelerator: 'Control+t',
                 click: menuFunctions.toggleToc

@@ -14,7 +14,7 @@
                 <p class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</p>
             </div>
             <div id="reader">
-                <i id="page-left" class="fa fa-chevron-left arrow" onclick="Book.prevPage();"></i>
+                <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
                 <div id="book">
                     <div id="start-page">
                         <p class="no-book-message" onclick="loadBookDialog();">Open a new book (Ctrl-O)</p>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                <i id="page-right" class="fa fa-chevron-right arrow" onclick="Book.nextPage();"></i>
+                <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
             </div>
         </div>
         <script>
@@ -43,6 +43,8 @@
          let persistedData;
          let persistInterval;
 
+         const backBuffer = [];
+         const forwardBuffer = [];
          const win = remote.getCurrentWindow();
          
          const loadBook = function(bookPath) {
@@ -109,7 +111,7 @@
                      }
                      else {
                          $tocEl.innerHTML = "";
-                         $tocList = tocBuilder(toc, Book);
+                         $tocList = tocBuilder(toc, Book, backBuffer);
                          $tocEl.appendChild($tocList);
                      }
                  });
@@ -140,6 +142,16 @@
              }
          }
 
+         const nextPage = function() {
+             backBuffer.push(Book.renderer.currentLocationCfi);
+             Book.nextPage();
+         }
+
+         const prevPage = function() {
+             backBuffer.push(Book.renderer.currentLocationCfi);
+             Book.prevPage();
+         }
+
          const init = function() {
              // Build 'recently opened' list
              document.getElementById("recently-opened").appendChild(recentlyOpenedBuilder(persistedData, loadBook));
@@ -153,7 +165,7 @@
              // Show #book
              document.getElementById("book").style.display = "flex";
          }
-         
+
          let currentFontSize = DEFAULT_FONT_SIZE;
 
          ipcRenderer.on('loadPersistedData', (event, data) => {
@@ -170,11 +182,11 @@
          });
 
          ipcRenderer.on('prevPage', () => {
-             Book.prevPage();
+             prevPage();
          });
 
          ipcRenderer.on('nextPage', () => {
-             Book.nextPage();
+             nextPage();
          });
 
          ipcRenderer.on('increaseFont', () => {
@@ -194,6 +206,22 @@
 
          ipcRenderer.on('toggleToc', () => {
              toggleToc();
+         });
+
+         ipcRenderer.on('back', () => {
+             backLocation = backBuffer.pop();
+             if (backLocation) {
+                 forwardBuffer.push(Book.renderer.currentLocationCfi);
+                 Book.goto(backLocation);
+             }
+         });
+
+         ipcRenderer.on('forward', () => {
+             forwardLocation = forwardBuffer.pop();
+             if (forwardLocation) {
+                 backBuffer.push(Book.renderer.currentLocationCfi);
+                 Book.goto(forwardLocation);
+             }
          });
         </script>
     </body>

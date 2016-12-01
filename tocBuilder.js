@@ -1,4 +1,4 @@
-const buildTocListItem = function(tocItem, Book) {
+const buildTocListItem = function(tocItem, Book, backBuffer) {
     const $listItem = document.createElement('li');
 
     const $stylingSpan = document.createElement('span');
@@ -9,6 +9,7 @@ const buildTocListItem = function(tocItem, Book) {
     
     $listItem.onclick = function(event) {
         event.stopPropagation();
+        backBuffer.push(Book.renderer.currentLocationCfi);
         Book.goto(tocItem.href);
     };
    
@@ -16,7 +17,7 @@ const buildTocListItem = function(tocItem, Book) {
         const $subList = document.createElement('ul');
         for (let i in tocItem.subitems) {
             let subItem = tocItem.subitems[i];
-            let $subItemList = buildTocListItem(subItem, Book);
+            let $subItemList = buildTocListItem(subItem, Book, backBuffer);
             $subList.appendChild($subItemList);
         }
         $listItem.appendChild($subList);
@@ -25,14 +26,12 @@ const buildTocListItem = function(tocItem, Book) {
     return $listItem;
 }
 
-module.exports = function(toc, Book) {
+module.exports = function(toc, Book, backBuffer) {
     const $tocList = document.createElement('ul');
     for (let i in toc) {
         let tocItem = toc[i];
-        let $listItem = buildTocListItem(tocItem, Book);
+        let $listItem = buildTocListItem(tocItem, Book, backBuffer);
         $tocList.appendChild($listItem);
     }
     return $tocList;
 }
-
-

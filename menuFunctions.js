@@ -32,5 +32,11 @@ module.exports = {
     },
     toggleToc: function(menuItem, browserWindow) {
         browserWindow.webContents.send('toggleToc');
+    },
+    back: function(menuItem, browserWindow) {
+        browserWindow.webContents.send('back');
+    },
+    forward: function(menuItem, browserWindow) {
+        browserWindow.webContents.send('forward');
     }
 }
