@@ -42,9 +42,9 @@
          let id;
          let persistedData;
          let persistInterval;
+         let backBuffer = [];
+         let forwardBuffer = [];
 
-         const backBuffer = [];
-         const forwardBuffer = [];
          const win = remote.getCurrentWindow();
          
          const loadBook = function(bookPath) {
@@ -111,7 +111,7 @@
                      }
                      else {
                          $tocEl.innerHTML = "";
-                         $tocList = tocBuilder(toc, Book, backBuffer);
+                         $tocList = tocBuilder(toc, Book, backBuffer, forwardBuffer);
                          $tocEl.appendChild($tocList);
                      }
                  });
@@ -144,11 +144,13 @@
 
          const nextPage = function() {
              backBuffer.push(Book.renderer.currentLocationCfi);
+             forwardBuffer = [];
              Book.nextPage();
          }
 
          const prevPage = function() {
              backBuffer.push(Book.renderer.currentLocationCfi);
+             forwardBuffer = [];
              Book.prevPage();
          }
 
@@ -211,7 +213,9 @@
          ipcRenderer.on('back', () => {
              backLocation = backBuffer.pop();
              if (backLocation) {
-                 forwardBuffer.push(Book.renderer.currentLocationCfi);
+                 if (forwardBuffer[forwardBuffer.length - 1] !== Book.renderer.currentLocationCfi) {
+                     forwardBuffer.push(Book.renderer.currentLocationCfi);
+                 }
                  Book.goto(backLocation);
              }
          });
@@ -219,7 +223,9 @@
          ipcRenderer.on('forward', () => {
              forwardLocation = forwardBuffer.pop();
              if (forwardLocation) {
-                 backBuffer.push(Book.renderer.currentLocationCfi);
+                 if (backBuffer[backBuffer.length - 1] !== Book.renderer.currentLocationCfi) {
+                     backBuffer.push(Book.renderer.currentLocationCfi);
+                 }
                  Book.goto(forwardLocation);
              }
          });
