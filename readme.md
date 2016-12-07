@@ -19,20 +19,20 @@ $ npm run build
 
 Keyboard shortcuts:
 
-`ctrl-o`: Open an eBook
+`ctrl+o`: Open an eBook
 
 `right arrow`: Next page
 
 `left arrow`: Previous page
 
-`ctrl - t`: Toggle table of contents
+`ctrl+t`: Toggle table of contents
 
-`ctrl - =`: Increase text size
+`ctrl+=`: Increase text size
 
-`ctrl - -`: Decrease text size
+`ctrl+-`: Decrease text size
 
-`ctrl - 0`: Restore default text size
+`ctrl+0`: Restore default text size
 
-`ctrl - q`: Quit
+`ctrl+q`: Quit
 
-`ctrl - shift - i`: Toggle Chrome developer tools
+`ctrl+shift+i`: Toggle Chrome developer tools
