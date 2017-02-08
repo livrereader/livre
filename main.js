@@ -114,7 +114,7 @@ function createWindow(bookData) {
         // Ugly hack because the path could be argv[1] or argv[2] depending on whether
         // we are running a compiled binary or source code
         let bookPath = process.argv[1];
-        if (path.extname(bookPath).toLowerCase() !== ".epub") {
+        if (bookPath && typeof bookPath === "string" && path.extname(bookPath).toLowerCase() !== ".epub") {
             bookPath = process.argv[2];
         }
         if (bookPath) {
