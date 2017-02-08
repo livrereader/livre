@@ -111,7 +111,12 @@ function createWindow(bookData) {
     }));
 
     const parseArgv = function() {
-        const bookPath = process.argv[2];
+        // Ugly hack because the path could be argv[1] or argv[2] depending on whether
+        // we are running a compiled binary or source code
+        let bookPath = process.argv[1];
+        if (path.extname(bookPath).toLowerCase() !== ".epub") {
+            bookPath = process.argv[2];
+        }
         if (bookPath) {
             fs.access(bookPath, function(err) {
                 if (err) {
