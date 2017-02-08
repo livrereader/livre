@@ -111,18 +111,27 @@ function createWindow(bookData) {
     }));
 
     const parseArgv = function() {
-        if (process.argv[2]) {
-            fs.access(process.argv[2], function(err) {
+        const bookPath = process.argv[2];
+        if (bookPath) {
+            fs.access(bookPath, function(err) {
                 if (err) {
                     dialog.showMessageBox(win, {
                         type: "error",
                         title: "Error loading book",
-                        message: "Unable to load file " + process.argv[2] + ".",
+                        message: "Unable to load file " + bookPath + ".",
+                        buttons: ["OK"]
+                    });
+                }
+                else if (path.extname(bookPath).toLowerCase() !== ".epub") {
+                    dialog.showMessageBox(win, {
+                        type: "error",
+                        title: "Error loading book",
+                        message: bookPath + " is not a valid .epub file.",
                         buttons: ["OK"]
                     });
                 }
                 else {
-                    win.webContents.send('loadBook', process.argv[2])
+                    win.webContents.send('loadBook', bookPath)
                 }
             });
         }
