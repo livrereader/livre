@@ -9,6 +9,7 @@
 ## Features
 - Minimalistic interface
 - Remembers the last page you read in every eBook
+- Remembers recently opened eBooks for easy access
 - Table of contents with links
 - Back and forward functionality
 
