@@ -112,17 +112,23 @@ function createWindow(bookData) {
     if (bookData) {
         win.webContents.on('dom-ready', function() {
             win.webContents.send('loadPersistedData', bookData);
+            if (process.argv[2]) {
+                win.webContents.send('loadBook', process.argv[2])
+            }
         });
     }
     else {
         win.webContents.on('dom-ready', function() {
             win.webContents.send('initNoData');
+            if (process.argv[2]) {
+                win.webContents.send('loadBook', process.argv[2])
+            }
         });
     }
 
     win.on('closed', () => {
         win = null;
-    })
+    });
 }
 
 function init() {

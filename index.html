@@ -46,7 +46,21 @@
          let forwardBuffer = [];
 
          const win = remote.getCurrentWindow();
-         
+
+         const init = function() {
+             // Build 'recently opened' list
+             document.getElementById("recently-opened").appendChild(recentlyOpenedBuilder(persistedData, loadBook));
+
+             // Ensure correct body height
+             document.body.style.height = win.getSize()[1] - 20 + "px";
+             win.on('resize', () => {
+                 document.body.style.height = win.getSize()[1] - 20 + "px";
+             });
+
+             // Show #book
+             document.getElementById("book").style.display = "flex";
+         }
+
          const loadBook = function(bookPath) {
              if (Book && Book.destroy) {
                  Book.destroy();
@@ -60,8 +74,8 @@
              const $book = document.getElementById('book');
              $book.innerHTML = "";
 
-             Book.open(bookPath);
-             Book.getMetadata()
+             Promise.resolve(Book.open(bookPath))
+                 .then(() => Book.getMetadata())
                  .then((metadata) => {
                      id = metadata.identifier;
                      if (!persistedData) {
@@ -114,6 +128,14 @@
                          $tocList = tocBuilder(toc, Book, backBuffer, forwardBuffer);
                          $tocEl.appendChild($tocList);
                      }
+                 })
+                 .catch((err) => {
+                     alert("Something went wrong!\n" + err.stack);
+                     if (Book && Book.destroy) {
+                         Book.destroy();
+                     }
+                     $book.innerHTML = "";
+                     init();
                  });
          }
 
@@ -152,20 +174,6 @@
              backBuffer.push(Book.renderer.currentLocationCfi);
              forwardBuffer = [];
              Book.prevPage();
-         }
-
-         const init = function() {
-             // Build 'recently opened' list
-             document.getElementById("recently-opened").appendChild(recentlyOpenedBuilder(persistedData, loadBook));
-
-             // Ensure correct body height
-             document.body.style.height = win.getSize()[1] - 20 + "px";
-             win.on('resize', () => {
-                 document.body.style.height = win.getSize()[1] - 20 + "px";
-             });
-
-             // Show #book
-             document.getElementById("book").style.display = "flex";
          }
 
          let currentFontSize = DEFAULT_FONT_SIZE;
