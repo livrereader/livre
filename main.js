@@ -3,7 +3,8 @@ const {
     app,
     BrowserWindow,
     Menu,
-    ipcMain
+    ipcMain,
+    dialog
 } = electron;
 const path = require('path');
 const url = require('url');
@@ -113,16 +114,38 @@ function createWindow(bookData) {
         win.webContents.on('dom-ready', function() {
             win.webContents.send('loadPersistedData', bookData);
             if (process.argv[2]) {
-                win.webContents.send('loadBook', process.argv[2])
+                fs.access(process.argv[2], function(err) {
+                    if (err) {
+                        dialog.showMessageBox(win, {
+                            type: "error",
+                            title: "Error loading book",
+                            message: "Unable to load file " + process.argv[2] + ".",
+                            buttons: ["OK"]
+                        });
+                    }
+                    else {
+                        win.webContents.send('loadBook', process.argv[2])
+                    }
+                });
             }
         });
     }
     else {
         win.webContents.on('dom-ready', function() {
             win.webContents.send('initNoData');
-            if (process.argv[2]) {
-                win.webContents.send('loadBook', process.argv[2])
-            }
+            fs.access(process.argv[2], function(err) {
+                if (err) {
+                    dialog.showMessageBox(win, {
+                        type: "error",
+                        title: "Error loading book",
+                        message: "Unable to load file " + process.argv[2] + ".",
+                        buttons: ["OK"]
+                    });
+                }
+                else {
+                    win.webContents.send('loadBook', process.argv[2])
+                }
+            });
         });
     }
 

@@ -74,7 +74,9 @@
              const $book = document.getElementById('book');
              $book.innerHTML = "";
 
-             Promise.resolve(Book.open(bookPath))
+             Promise.resolve(() => {
+                 Book.open(bookPath)
+             })
                  .then(() => Book.getMetadata())
                  .then((metadata) => {
                      id = metadata.identifier;
