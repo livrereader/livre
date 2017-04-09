@@ -15,7 +15,7 @@
 
 ## Installation and Usage
 ```
-$ git clone https://github.com/jdormit/livre
+$ git clone https://github.com/livrereader/livre
 $ cd livre
 $ npm install
 $ # To start the Electron process locally:
