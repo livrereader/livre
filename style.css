@@ -79,6 +79,15 @@ html {
     overflow-x: wrap;
 }
 
+#table-of-contents ul {
+    list-style-type: none;
+}
+
+#table-of-contents ul.toc {
+    padding-left: 0;
+    margin-top: 0;
+}
+
 #table-of-contents li {
     color: black;
 }

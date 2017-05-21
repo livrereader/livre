@@ -29,6 +29,7 @@ const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
 
 module.exports = function(toc, Book, backBuffer, forwardBuffer) {
     const $tocList = document.createElement('ul');
+    $tocList.classList = "toc";
     for (let i in toc) {
         let tocItem = toc[i];
         let $listItem = buildTocListItem(tocItem, Book, backBuffer, forwardBuffer);
