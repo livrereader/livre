@@ -1,42 +1,40 @@
-const {dialog} = require('electron');
+const { dialog } = require("electron");
 
 const openDialogOptions = {
-    filters: [
-        {name: "eBooks", extensions: ['epub']}
-    ],
-    properties: ['openFile']
+    filters: [{ name: "eBooks", extensions: ["epub"] }],
+    properties: ["openFile"]
 };
 
 module.exports = {
     open: function(menuItem, browserWindow) {
-        dialog.showOpenDialog(browserWindow, openDialogOptions, (bookPaths) => {
+        dialog.showOpenDialog(browserWindow, openDialogOptions, bookPaths => {
             if (bookPaths) {
-                browserWindow.webContents.send('loadBook', bookPaths[0]);
+                browserWindow.webContents.send("loadBook", bookPaths[0]);
             }
         });
     },
     nextPage: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('nextPage');
+        browserWindow.webContents.send("nextPage");
     },
     previousPage: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('prevPage');
+        browserWindow.webContents.send("prevPage");
     },
     increaseFontSize: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('increaseFont');
+        browserWindow.webContents.send("increaseFont");
     },
     decreaseFontSize: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('decreaseFont');
+        browserWindow.webContents.send("decreaseFont");
     },
     restoreDefaultFontSize: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('restoreFont');
+        browserWindow.webContents.send("restoreFont");
     },
     toggleToc: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('toggleToc');
+        browserWindow.webContents.send("toggleToc");
     },
     back: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('back');
+        browserWindow.webContents.send("back");
     },
     forward: function(menuItem, browserWindow) {
-        browserWindow.webContents.send('forward');
+        browserWindow.webContents.send("forward");
     }
-}
+};

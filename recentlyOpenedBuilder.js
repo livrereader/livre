@@ -12,4 +12,4 @@ module.exports = function(persistedData, openBookFunction) {
         docFrag.appendChild($bookItem);
     }
     return docFrag;
-}
+};
