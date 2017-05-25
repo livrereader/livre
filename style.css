@@ -71,6 +71,19 @@ html {
     font-size: 45px;
 }
 
+#titleWrapper {
+    position: fixed;
+    padding-top: 0.5em;
+    width: 100%;
+    text-align: center;
+    color: #777;
+}
+
+#title {
+    margin: auto;
+    max-width: 50%;
+}
+
 #table-of-contents {
     display: none;
     width: 500px;

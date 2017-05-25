@@ -21,9 +21,9 @@ const init = function() {
         .appendChild(recentlyOpenedBuilder(persistedData, loadBook));
 
     // Ensure correct body height
-    document.body.style.height = win.getSize()[1] - 20 + "px";
+    document.body.style.height = win.getSize()[1] - 50 + "px";
     win.on("resize", () => {
-        document.body.style.height = win.getSize()[1] - 20 + "px";
+        document.body.style.height = win.getSize()[1] - 50 + "px";
     });
 
     // Show #book
@@ -46,6 +46,14 @@ const loadBook = function(bookPath) {
     Promise.resolve(Book.open(bookPath))
         .then(() => Book.getMetadata())
         .then(metadata => {
+            // Fill in title and author div
+            if (metadata.bookTitle) {
+                const $title = document.getElementById("title");
+                const title = metadata.creator ? metadata.bookTitle + " - " + metadata.creator : metadata.bookTitle;
+                const titleContent = document.createTextNode(title);
+                $title.appendChild(titleContent);
+            }
+            // Set up location persistence
             id = metadata.identifier;
             if (!persistedData) {
                 persistedData = {};
