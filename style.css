@@ -90,6 +90,7 @@ html {
 
 #table-of-contents li {
     color: black;
+    line-height: 1.5;
 }
 
 #table-of-contents li>span:hover {
