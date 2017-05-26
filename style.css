@@ -1,5 +1,26 @@
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'),
+       url('./fonts/open-sans-v13-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('./fonts/open-sans-v13-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* open-sans-italic - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'),
+       url('./fonts/open-sans-v13-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('./fonts/open-sans-v13-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
 html {
     cursor: default;
+    font-family: 'Open Sans', sans-serif;
 }
 
 #app {
@@ -31,7 +52,7 @@ html {
     margin: auto;
     color: #292929;
     list-style-type: none;
-    font-size: 40px;
+    font-size: 2.1rem;
     max-height: 100%;
     overflow-y: scroll;
 }
@@ -55,7 +76,7 @@ html {
 .no-book-message {
     margin: auto;
     color: #292929;
-    font-size: 60px;
+    font-size: 3.7rem;
 }
 
 .no-book-message:hover {
@@ -68,7 +89,7 @@ html {
 
 #recent-books-label {
     margin: auto;
-    font-size: 45px;
+    font-size: 2.8rem;
 }
 
 #titleWrapper {
@@ -90,6 +111,8 @@ html {
     height: 100%;
     overflow-y: scroll;
     overflow-x: wrap;
+    padding-right: 0.5em;
+    border-right: 1px solid #CCC;
 }
 
 #table-of-contents ul {
@@ -111,7 +134,7 @@ html {
 }
 
 #table-of-contents .no-book-message {
-    font-size: 30px;
+    font-size: 1.6rem;
 }
 
 .arrow {
