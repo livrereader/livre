@@ -9,9 +9,9 @@ const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
 
     $listItem.onclick = function(event) {
         event.stopPropagation();
-        backBuffer.push(Book.renderer.currentLocationCfi);
+        backBuffer.push(Book.rendition.currentLocation().start);
         forwardBuffer = [];
-        Book.goto(tocItem.href);
+        Book.rendition.display(tocItem.href);
     };
 
     if (tocItem.subitems && tocItem.subitems.length > 0) {

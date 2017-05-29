@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="./lib/epub.js/dist/epub.js"></script>
+        <script type="text/javascript" src="./lib/jszip.min.js"></script>
+        <script type="text/javascript">
+            const {ipcRenderer} = require("electron");
+
+            ipcRenderer.on("find", (event, data) => {
+                let results = [];
+                const {bookPath, query} = data;
+                const Book = ePub();
+                Book.open(bookPath).then(() => {
+                    const chapters = Book.spine.map(chapter => new EPUBJS.Chapter(chapter, Book.store, Book.credentials));
+                    for (let i =0; i < chapters.length; i++) {
+                        const chapter = chapters[i];
+                        chapter.load().then(() => {
+                            const chapterResults = chapter.find(query);
+                            results = results.concat(chapterResults);
+                            if (i == chapters.length - 1) {
+                                ipcRenderer.send('findResults', results);
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+    </head>
+</html>

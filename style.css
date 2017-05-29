@@ -33,6 +33,7 @@ html {
 #reader {
     display: flex;
     width: 100%;
+    min-width: 50%;
     height: 100%;
     max-height: 100%;
 }
@@ -107,7 +108,8 @@ html {
 
 #table-of-contents {
     display: none;
-    width: 500px;
+    width: 350px;
+    min-width: 350px;
     height: 100%;
     overflow-y: scroll;
     overflow-x: wrap;
@@ -135,6 +137,30 @@ html {
 
 #table-of-contents .no-book-message {
     font-size: 1.6rem;
+}
+
+#find {
+    display: none;
+    width: 350px; 
+    min-width: 350px;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: wrap;
+    padding-left: 0.5em;
+    border-left: 1px solid #CCC;
+}
+
+#find input {
+    font-family: "FontAwesome", "Open Sans";
+    line-height: 2;
+    font-size: 1.2rem;
+    width: 99%;
+    padding-left: 0.5em;
+    box-sizing: border-box;
+}
+
+#find input:focus {
+    outline: none;
 }
 
 .arrow {

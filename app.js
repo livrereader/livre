@@ -2,6 +2,7 @@ const { ipcRenderer, remote } = require("electron");
 const { dialog } = remote;
 const tocBuilder = require("./tocBuilder");
 const recentlyOpenedBuilder = require("./recentlyOpenedBuilder");
+const findResultsBuilder = require("./findResultsBuilder");
 
 const DEFAULT_FONT_SIZE = 18;
 
@@ -26,6 +27,9 @@ const init = function() {
         document.body.style.height = win.getSize()[1] - 50 + "px";
     });
 
+    // Set up event listeners
+    setupEventListeners();
+
     // Show #book
     document.getElementById("book").style.display = "flex";
 };
@@ -43,13 +47,14 @@ const loadBook = function(bookPath) {
     const $book = document.getElementById("book");
     $book.innerHTML = "";
 
-    Promise.resolve(Book.open(bookPath))
-        .then(() => Book.getMetadata())
+    Book.open(bookPath)
+        .then(() => Book.renderTo("book", {width: "100%", height: "100%"}))
+        .then(() => Book.loaded.metadata)
         .then(metadata => {
             // Fill in title and author div
-            if (metadata.bookTitle) {
+            if (metadata.title) {
                 const $title = document.getElementById("title");
-                const title = metadata.creator ? metadata.bookTitle + " - " + metadata.creator : metadata.bookTitle;
+                const title = metadata.creator ? metadata.title + " - " + metadata.creator : metadata.title;
                 const titleContent = document.createTextNode(title);
                 $title.appendChild(titleContent);
             }
@@ -60,7 +65,7 @@ const loadBook = function(bookPath) {
             }
             if (!persistedData[id]) {
                 persistedData[id] = {
-                    title: metadata.bookTitle,
+                    title: metadata.title,
                     href: bookPath
                 };
             } else {
@@ -72,22 +77,21 @@ const loadBook = function(bookPath) {
                 }
                 if (
                     !persistedData[id].title ||
-                    persistedData[id].title !== metadata.bookTitle
+                    persistedData[id].title !== metadata.title
                 ) {
-                    persistedData[id].title = metadata.bookTitle;
+                    persistedData[id].title = metadata.title;
                 }
             }
             if (persistedData[id].currentLocation) {
-                Book.settings.previousLocationCfi =
-                    persistedData[id].currentLocation;
+                return persistedData[id].currentLocation;
             }
         })
-        .then(() => Book.renderTo("book"))
+        .then(location => Book.rendition.display(location))
         .then(() => {
             ipcRenderer.send("persistData", persistedData);
 
-            Book.on("renderer:locationChanged", function(locationCfi) {
-                persistedData[id].currentLocation = locationCfi;
+            Book.rendition.on("locationChanged", function(locationCfi) {
+                persistedData[id].currentLocation = locationCfi.start;
                 ipcRenderer.send("persistData", persistedData);
             });
 
@@ -99,9 +103,10 @@ const loadBook = function(bookPath) {
                 ipcRenderer.send("persistData", persistedData);
             }, 30000);
 
-            return Book.getToc();
+            return Book.loaded.navigation;
         })
-        .then(toc => {
+        .then(navigation => {
+            const toc = navigation.toc;
             const $tocEl = document.getElementById("table-of-contents");
             if (!toc || toc.length === 0) {
                 $tocEl.innerHTML = "<h2>No table of contents available.</h2>";
@@ -110,6 +115,10 @@ const loadBook = function(bookPath) {
                 $tocList = tocBuilder(toc, Book, backBuffer, forwardBuffer);
                 $tocEl.appendChild($tocList);
             }
+        })
+        .then(() => {
+            const $findInput = document.getElementById("findInput");
+            $findInput.removeAttribute("disabled");
         })
         .catch(err => {
             alert("Something went wrong!\n" + err.stack);
@@ -144,16 +153,46 @@ const toggleToc = function() {
 };
 
 const nextPage = function() {
-    backBuffer.push(Book.renderer.currentLocationCfi);
+    backBuffer.push(Book.rendition.currentLocation().start);
     forwardBuffer = [];
-    Book.nextPage();
+    Book.rendition.next();
 };
 
 const prevPage = function() {
-    backBuffer.push(Book.renderer.currentLocationCfi);
+    backBuffer.push(Book.rendition.currentLocation().start);
     forwardBuffer = [];
-    Book.prevPage();
+    Book.rendition.prev();
 };
+
+const toggleFind = function() {
+    const $find = document.getElementById("find");
+    if ($find.style.display == "none" || $find.style.display == "") {
+        $find.style.display = "inline";
+    } else {
+        $find.style.display = "none";
+    }
+};
+
+function setupEventListeners() { 
+   const $findInput = document.getElementById("findInput");
+    $findInput.addEventListener("input", event => {
+        const query = $findInput.value;
+        if (query === "") {
+            return;
+        }
+        ipcRenderer.send('find', {
+            bookPath: Book.settings.bookPath,
+            query: query
+        });
+    });
+    ipcRenderer.on('findResults', (event, data) => {
+        console.log(data);
+        const $findResults = document.getElementById("findResults");
+        $findResults.innerHTML = "";
+        $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
+        $findResults.appendChild($resultsList);
+    });
+}
 
 let currentFontSize = DEFAULT_FONT_SIZE;
 
@@ -180,17 +219,17 @@ ipcRenderer.on("nextPage", () => {
 
 ipcRenderer.on("increaseFont", () => {
     currentFontSize += 2;
-    Book.setStyle("font-size", currentFontSize + "px");
+    Book.rendition.themes.fontSize(currentFontSize + "px");
 });
 
 ipcRenderer.on("decreaseFont", () => {
     currentFontSize -= 2;
-    Book.setStyle("font-size", currentFontSize + "px");
+    Book.rendition.themes.fontSize(currentFontSize + "px");
 });
 
 ipcRenderer.on("restoreFont", () => {
     currentFontSize = DEFAULT_FONT_SIZE;
-    Book.setStyle("font-size", currentFontSize + "px");
+    Book.rendition.themes.fontSize(currentFontSize + "px");
 });
 
 ipcRenderer.on("toggleToc", () => {
@@ -202,11 +241,11 @@ ipcRenderer.on("back", () => {
     if (backLocation) {
         if (
             forwardBuffer[forwardBuffer.length - 1] !==
-            Book.renderer.currentLocationCfi
+            Book.rendition.currentLocation().start
         ) {
-            forwardBuffer.push(Book.renderer.currentLocationCfi);
+            forwardBuffer.push(Book.rendition.currentLocation().start);
         }
-        Book.goto(backLocation);
+        Book.rendition.display(backLocation);
     }
 });
 
@@ -215,10 +254,14 @@ ipcRenderer.on("forward", () => {
     if (forwardLocation) {
         if (
             backBuffer[backBuffer.length - 1] !==
-            Book.renderer.currentLocationCfi
+            Book.rendition.currentLocation().start
         ) {
-            backBuffer.push(Book.renderer.currentLocationCfi);
+            backBuffer.push(Book.rendition.currentLocation().start);
         }
-        Book.goto(forwardLocation);
+        Book.rendition.display(forwardLocation);
     }
+});
+
+ipcRenderer.on("find", () => {
+    toggleFind();
 });

@@ -1,0 +1,3 @@
+[submodule "lib/epub.js"]
+	path = lib/epub.js
+	url = git@github.com:futurepress/epub.js
