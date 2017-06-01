@@ -1,6 +1,6 @@
 const buildResultListItem = function(result, Book, backBuffer, forwardBuffer) {
     const $result = document.createElement("li");
-    const resultText = `Page ${Book.pagination.pageFromCfi(result.cfi)}: ${result.excerpt.trim()}`;
+    const resultText = `${result.excerpt.trim()}`;
     const $resultContent = document.createTextNode(resultText);
     $result.appendChild($resultContent);
 
@@ -8,7 +8,7 @@ const buildResultListItem = function(result, Book, backBuffer, forwardBuffer) {
         event.stopPropagation();
         backBuffer.push(Book.rendition.currentLocation().start);
         forwardBuffer = [];
-        Book.gotoCfi(result.cfi);
+        Book.rendition.display(result.cfi);
     };
 
     return $result;
