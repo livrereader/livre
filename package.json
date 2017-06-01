@@ -5,7 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . Livre --icon icon --out ./dist --overwrite"
+    "build": "electron-packager . Livre --icon icon --out ./dist --overwrite",
+    "precommit": "lint-staged",
+    "prepare": "git submodule init && git submodule update && (cd ./lib/epub.js && npm install && npm run build)"
+  },
+  "lint-staged": {
+    "*.js": ["prettier --tab-width 4 --write", "git add"]
   },
   "repository": {
     "url": "git@github.com:jdormit/livre.git",
@@ -18,6 +23,9 @@
     "epub.js": "^0.2.15"
   },
   "devDependencies": {
-    "electron-packager": "^8.3.0"
+    "electron-packager": "^8.3.0",
+    "husky": "^0.13.4",
+    "lint-staged": "^3.5.1",
+    "prettier": "^1.3.1"
   }
 }
