@@ -165,7 +165,7 @@ function createWindow(bookData) {
 }
 
 function createBackgroundWindow(mainWindow) {
-    backgroundWin = new BrowserWindow({show: false, parent: win});
+    backgroundWin = new BrowserWindow({ show: false, parent: win });
 
     backgroundWin.loadURL(
         url.format({

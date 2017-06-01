@@ -50,13 +50,15 @@ const loadBook = function(path) {
     $book.innerHTML = "";
 
     Book.open(bookPath)
-        .then(() => Book.renderTo("book", {width: "100%", height: "100%"}))
+        .then(() => Book.renderTo("book", { width: "100%", height: "100%" }))
         .then(() => Book.loaded.metadata)
         .then(metadata => {
             // Fill in title and author div
             if (metadata.title) {
                 const $title = document.getElementById("title");
-                const title = metadata.creator ? metadata.title + " - " + metadata.creator : metadata.title;
+                const title = metadata.creator
+                    ? metadata.title + " - " + metadata.creator
+                    : metadata.title;
                 const titleContent = document.createTextNode(title);
                 $title.appendChild(titleContent);
             }
@@ -184,22 +186,27 @@ const toggleFind = function() {
     }
 };
 
-function setupEventListeners() { 
+function setupEventListeners() {
     const $findInput = document.getElementById("findInput");
     $findInput.addEventListener("input", event => {
         const query = $findInput.value;
         if (query === "") {
             return;
         }
-        ipcRenderer.send('find', {
+        ipcRenderer.send("find", {
             bookPath: bookPath,
             query: query
         });
     });
-    ipcRenderer.on('findResults', (event, data) => {
+    ipcRenderer.on("findResults", (event, data) => {
         const $findResults = document.getElementById("findResults");
         $findResults.innerHTML = "";
-        $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
+        $resultsList = findResultsBuilder(
+            data,
+            Book,
+            backBuffer,
+            forwardBuffer
+        );
         $findResults.appendChild($resultsList);
     });
 }
