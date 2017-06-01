@@ -185,7 +185,6 @@ const toggleFind = function() {
 };
 
 function setupEventListeners() { 
-
     const $findInput = document.getElementById("findInput");
     $findInput.addEventListener("input", event => {
         const query = $findInput.value;
