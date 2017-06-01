@@ -12,6 +12,7 @@ let persistedData;
 let persistInterval;
 let backBuffer = [];
 let forwardBuffer = [];
+let bookPath;
 
 const win = remote.getCurrentWindow();
 
@@ -34,7 +35,8 @@ const init = function() {
     document.getElementById("book").style.display = "flex";
 };
 
-const loadBook = function(bookPath) {
+const loadBook = function(path) {
+    bookPath = path;
     if (Book && Book.destroy) {
         Book.destroy();
     }
@@ -90,11 +92,6 @@ const loadBook = function(bookPath) {
         .then(() => {
             ipcRenderer.send("persistData", persistedData);
 
-            Book.rendition.on("locationChanged", function(locationCfi) {
-                persistedData[id].currentLocation = locationCfi.start;
-                ipcRenderer.send("persistData", persistedData);
-            });
-
             if (persistInterval) {
                 window.clearInterval(persistInterval);
             }
@@ -115,6 +112,19 @@ const loadBook = function(bookPath) {
                 $tocList = tocBuilder(toc, Book, backBuffer, forwardBuffer);
                 $tocEl.appendChild($tocList);
             }
+        })
+        .then(() => {
+            // Setup Book event listeners
+            Book.rendition.on("locationChanged", function(locationCfi) {
+                persistedData[id].currentLocation = locationCfi.start;
+                ipcRenderer.send("persistData", persistedData);
+            });
+            Book.rendition.hooks.content.register(view => {
+                view.on("link", link => {
+                    backBuffer.push(Book.rendition.currentLocation().start);
+                    forwardBuffer = [];
+                });
+            });
         })
         .then(() => {
             const $findInput = document.getElementById("findInput");
@@ -138,7 +148,8 @@ const openDialogOptions = {
 const loadBookDialog = function() {
     dialog.showOpenDialog(win, openDialogOptions, bookPaths => {
         if (bookPaths) {
-            loadBook(bookPaths[0]);
+            bookPath = bookPaths[0];
+            loadBook(bookPath);
         }
     });
 };
@@ -174,19 +185,19 @@ const toggleFind = function() {
 };
 
 function setupEventListeners() { 
-   const $findInput = document.getElementById("findInput");
+
+    const $findInput = document.getElementById("findInput");
     $findInput.addEventListener("input", event => {
         const query = $findInput.value;
         if (query === "") {
             return;
         }
         ipcRenderer.send('find', {
-            bookPath: Book.settings.bookPath,
+            bookPath: bookPath,
             query: query
         });
     });
     ipcRenderer.on('findResults', (event, data) => {
-        console.log(data);
         const $findResults = document.getElementById("findResults");
         $findResults.innerHTML = "";
         $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
@@ -205,7 +216,8 @@ ipcRenderer.on("initNoData", () => {
     init();
 });
 
-ipcRenderer.on("loadBook", (event, bookPath) => {
+ipcRenderer.on("loadBook", (event, path) => {
+    bookPath = path;
     loadBook(bookPath);
 });
 
