@@ -6,9 +6,9 @@ const buildResultListItem = function(result, Book, backBuffer, forwardBuffer) {
 
     $result.onclick = function(event) {
         event.stopPropagation();
-        backBuffer.push(Book.rendition.currentLocation().start);
+        backBuffer.push(Book.renderer.currentLocationCfi);
         forwardBuffer = [];
-        Book.gotoCfi(result.cfi);
+        Book.goto(result.cfi);
     };
 
     return $result;
