@@ -48,6 +48,11 @@ const menuTemplate = [
                 click: menuFunctions.forward
             },
             {
+                label: "Find in Chapter",
+                accelerator: "Control+f",
+                click: menuFunctions.find
+            },
+            {
                 label: "Toggle Table of Contents",
                 accelerator: "Control+t",
                 click: menuFunctions.toggleToc
@@ -154,6 +159,28 @@ function createWindow(bookData) {
 
     win.on("closed", () => {
         win = null;
+    });
+
+    createBackgroundWindow(win);
+}
+
+function createBackgroundWindow(mainWindow) {
+    backgroundWin = new BrowserWindow({ show: false, parent: win });
+
+    backgroundWin.loadURL(
+        url.format({
+            pathname: path.join(__dirname, "background.html"),
+            protocol: "file",
+            slashes: true
+        })
+    );
+
+    ipcMain.on("find", (event, data) => {
+        backgroundWin.webContents.send("find", data);
+    });
+
+    ipcMain.on("findResults", (event, data) => {
+        win.webContents.send("findResults", data);
     });
 }
 

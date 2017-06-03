@@ -2,6 +2,7 @@ const { ipcRenderer, remote } = require("electron");
 const { dialog } = remote;
 const tocBuilder = require("./tocBuilder");
 const recentlyOpenedBuilder = require("./recentlyOpenedBuilder");
+const findResultsBuilder = require("./findResultsBuilder");
 
 const DEFAULT_FONT_SIZE = 18;
 
@@ -26,6 +27,9 @@ const init = function() {
         document.body.style.height = win.getSize()[1] - 50 + "px";
     });
 
+    // Set up event listeners
+    setupEventListeners();
+
     // Show #book
     document.getElementById("book").style.display = "flex";
 };
@@ -49,6 +53,7 @@ const loadBook = function(bookPath) {
             // Fill in title and author div
             if (metadata.bookTitle) {
                 const $title = document.getElementById("title");
+                $title.innerHTML = "";
                 const title = metadata.creator ? metadata.bookTitle + " - " + metadata.creator : metadata.bookTitle;
                 const titleContent = document.createTextNode(title);
                 $title.appendChild(titleContent);
@@ -111,6 +116,10 @@ const loadBook = function(bookPath) {
                 $tocEl.appendChild($tocList);
             }
         })
+        .then(() => {
+            const $findInput = document.getElementById("findInput");
+            $findInput.removeAttribute("disabled");
+        })
         .catch(err => {
             alert("Something went wrong!\n" + err.stack);
             if (Book && Book.destroy) {
@@ -154,6 +163,41 @@ const prevPage = function() {
     forwardBuffer = [];
     Book.prevPage();
 };
+
+const toggleFind = function() {
+    const $find = document.getElementById("find");
+    if ($find.style.display == "none" || $find.style.display == "") {
+        $find.style.display = "inline";
+    } else {
+        $find.style.display = "none";
+    }
+};
+
+function setupEventListeners() {
+    const $findInput = document.getElementById("findInput");
+    $findInput.addEventListener("input", event => {
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+        this.timeoutId = setTimeout(() => {
+            const query = $findInput.value;
+            if (query === "") {
+                return;
+            }
+            ipcRenderer.send('find', {
+                bookPath: Book.settings.bookPath,
+                query: query
+            });
+        }, 150);
+    });
+    ipcRenderer.on('findResults', (event, data) => {
+        console.log(data);
+        const $findResults = document.getElementById("findResults");
+        $findResults.innerHTML = "";
+        $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
+        $findResults.appendChild($resultsList);
+    });
+}
 
 let currentFontSize = DEFAULT_FONT_SIZE;
 
@@ -221,4 +265,8 @@ ipcRenderer.on("forward", () => {
         }
         Book.goto(forwardLocation);
     }
+});
+
+ipcRenderer.on("find", () => {
+    toggleFind();
 });

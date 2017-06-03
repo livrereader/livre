@@ -36,5 +36,8 @@ module.exports = {
     },
     forward: function(menuItem, browserWindow) {
         browserWindow.webContents.send("forward");
+    },
+    find: function(menuItem, browserWindow) {
+        browserWindow.webContents.send("find");
     }
 };
