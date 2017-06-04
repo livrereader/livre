@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { app, BrowserWindow, Menu, ipcMain, dialog } = electron;
+const { app, BrowserWindow, Menu, ipcMain, dialog, powerSaveBlocker } = electron;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
@@ -210,9 +210,12 @@ function init() {
     });
 }
 
+const powerSaveId = powerSaveBlocker.start("prevent-display-sleep");
+
 app.on("ready", init);
 
 app.on("windows-all-closed", () => {
+    powerSaveBlocker.stop(powerSaveId);
     if (process.platform !== "darwin") {
         app.quit();
     }
