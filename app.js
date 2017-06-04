@@ -96,6 +96,11 @@ const loadBook = function(bookPath) {
                 ipcRenderer.send("persistData", persistedData);
             });
 
+            Book.on("linkClicked", function(href) {
+                backBuffer.push(Book.renderer.currentLocationCfi);
+                forwardBuffer = [];
+            });
+
             if (persistInterval) {
                 window.clearInterval(persistInterval);
             }
