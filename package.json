@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . Livre --icon icon --out ./dist --overwrite"
+    "build": "electron-packager . Livre --icon icon --out ./dist --overwrite",
+    "prepare": "git submodule init && git submodule update && (cd ./lib/epub.js; npm install)"
   },
   "repository": {
     "url": "git@github.com:jdormit/livre.git",
@@ -15,7 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "electron": "^1.4.9",
-    "epub.js": "^0.2.15"
   },
   "devDependencies": {
     "electron-packager": "^8.3.0"
