@@ -12,6 +12,7 @@
 - Remembers recently opened eBooks for easy access
 - Table of contents with links
 - Back and forward functionality
+- Full text search
 
 ## Installation and Usage
 ```
@@ -41,6 +42,8 @@ The build process has been tested on Linux but not Windows or macOS. If you run 
 `alt+right arrow`: Forward
 
 `ctrl+t`: Toggle table of contents
+
+`ctrl+f`: Find in eBook
 
 `ctrl+=`: Increase text size
 
