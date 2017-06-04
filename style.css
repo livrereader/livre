@@ -163,6 +163,17 @@ html {
     outline: none;
 }
 
+#findResults {
+    word-wrap: break-word;
+    padding-right: 0.5em;
+}
+
+#findResults ul {
+    list-style-type: none;
+    padding: 0;
+    line-height: 1.5;
+}
+
 .findLoading {
     text-align: center;
     padding-top: 1.5em;
