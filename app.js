@@ -174,13 +174,19 @@ const toggleFind = function() {
     if ($find.style.display == "none" || $find.style.display == "") {
         $find.style.display = "inline";
     } else {
+        const $findResults = document.getElementById("findResults");
+        const $findInput = document.getElementById("findInput");
+        $findResults.innerHTML = "";
+        $findInput.value = "";
         $find.style.display = "none";
     }
 };
 
 function setupEventListeners() {
     const $findInput = document.getElementById("findInput");
+    const $findResults = document.getElementById("findResults");
     $findInput.addEventListener("input", event => {
+        $findResults.innerHTML = "";
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
@@ -193,11 +199,11 @@ function setupEventListeners() {
                 bookPath: Book.settings.bookPath,
                 query: query
             });
+            $findResults.innerHTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>'
         }, 150);
     });
     ipcRenderer.on('findResults', (event, data) => {
         console.log(data);
-        const $findResults = document.getElementById("findResults");
         $findResults.innerHTML = "";
         $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
         $findResults.appendChild($resultsList);

@@ -163,6 +163,15 @@ html {
     outline: none;
 }
 
+.findLoading {
+    text-align: center;
+    padding-top: 1.5em;
+}
+
+.findLoading i {
+    margin: auto;
+}
+
 .arrow {
     margin: auto;
     font-size: 40px;
