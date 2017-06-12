@@ -21,6 +21,7 @@
 html {
     cursor: default;
     font-family: 'Open Sans', sans-serif;
+    font-size: 0.9rem;
 }
 
 #app {
@@ -115,6 +116,7 @@ html {
     overflow-x: wrap;
     padding-right: 0.5em;
     border-right: 1px solid #CCC;
+    font-size: 1.2rem;
 }
 
 #table-of-contents ul {
@@ -166,6 +168,7 @@ html {
 #findResults {
     word-wrap: break-word;
     padding-right: 0.5em;
+    font-size: 1.2rem;
 }
 
 #findResults ul {
