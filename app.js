@@ -4,7 +4,7 @@ const tocBuilder = require("./tocBuilder");
 const recentlyOpenedBuilder = require("./recentlyOpenedBuilder");
 const findResultsBuilder = require("./findResultsBuilder");
 
-const DEFAULT_FONT_SIZE = 18;
+const DEFAULT_FONT_SIZE = 1.2;
 
 let Book;
 let id;
@@ -40,7 +40,7 @@ const loadBook = function(bookPath) {
     }
     Book = ePub({
         styles: {
-            "font-size": DEFAULT_FONT_SIZE + "px"
+            "font-size": DEFAULT_FONT_SIZE + "rem"
         }
     });
 
@@ -237,18 +237,18 @@ ipcRenderer.on("nextPage", () => {
 });
 
 ipcRenderer.on("increaseFont", () => {
-    currentFontSize += 2;
-    Book.setStyle("font-size", currentFontSize + "px");
+    currentFontSize /= 0.75;
+    Book.setStyle("font-size", currentFontSize + "rem");
 });
 
 ipcRenderer.on("decreaseFont", () => {
-    currentFontSize -= 2;
-    Book.setStyle("font-size", currentFontSize + "px");
+    currentFontSize *= 0.75;
+    Book.setStyle("font-size", currentFontSize + "rem");
 });
 
 ipcRenderer.on("restoreFont", () => {
     currentFontSize = DEFAULT_FONT_SIZE;
-    Book.setStyle("font-size", currentFontSize + "px");
+    Book.setStyle("font-size", currentFontSize + "rem");
 });
 
 ipcRenderer.on("toggleToc", () => {
