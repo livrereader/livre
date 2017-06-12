@@ -1,8 +1,13 @@
 const buildResultListItem = function(result, Book, backBuffer, forwardBuffer) {
     const $result = document.createElement("li");
-    const resultText = `${result.excerpt.trim()}`;
-    const $resultContent = document.createTextNode(resultText);
-    $result.appendChild($resultContent);
+    $result.classList = "findResult";
+    const location = Book.locations.locationFromCfi(result.cfi);
+    const resultHTML = `<div>
+                            <span class="findResultExcerpt">${result.excerpt.trim()}</span>
+                            <br>
+                            <span class="findResultLocation">Location: ${location}</span>
+                        </div>`;
+    $result.innerHTML = resultHTML;
 
     $result.onclick = function(event) {
         event.stopPropagation();
