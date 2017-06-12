@@ -177,7 +177,17 @@ html {
     line-height: 1.5;
 }
 
-#findResults li:hover {
+#findResults li {
+    border-bottom: 1px solid #777;
+}
+
+#findResults .findResultLocation {
+    padding-top: 1.5em;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+#findResults .findResultExcerpt:hover {
     color: #777;
 }
 
