@@ -125,6 +125,9 @@ const loadBook = function(bookPath) {
             const $findInput = document.getElementById("findInput");
             $findInput.removeAttribute("disabled");
         })
+        .then(() => {
+            Book.locations.generate();
+        })
         .catch(err => {
             alert("Something went wrong!\n" + err.stack);
             if (Book && Book.destroy) {
