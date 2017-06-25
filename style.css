@@ -75,6 +75,18 @@ html {
     color: #000;
 }
 
+#menu-button {
+    position: absolute;
+    font-size: 2.8rem;
+    top: 40px;
+    left: 40px;
+    color: #BBB;
+}
+
+#menu-button:hover {
+    color: #777;
+}
+
 .no-book-message {
     margin: auto;
     color: #292929;
