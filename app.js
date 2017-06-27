@@ -22,9 +22,9 @@ const init = function() {
         .appendChild(recentlyOpenedBuilder(persistedData, loadBook));
 
     // Ensure correct body height
-    document.body.style.height = win.getSize()[1] - 50 + "px";
+    document.body.style.height = win.getSize()[1] - 80 + "px";
     win.on("resize", () => {
-        document.body.style.height = win.getSize()[1] - 50 + "px";
+        document.body.style.height = win.getSize()[1] - 80 + "px";
     });
 
     // Set up event listeners
@@ -151,8 +151,8 @@ const loadBookDialog = function() {
     });
 };
 
-const toggleToc = function() {
-    const $tocEl = document.getElementById("table-of-contents");
+const toggleSidebar = function() {
+    const $tocEl = document.getElementById("sidebar");
     if ($tocEl.style.display === "none" || $tocEl.style.display === "") {
         $tocEl.style.display = "inline";
     } else {
@@ -210,6 +210,11 @@ function setupEventListeners() {
         $findResults.innerHTML = "";
         $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
         $findResults.appendChild($resultsList);
+    });
+
+    const $menuButton = document.getElementById("menu-button");
+    $menuButton.addEventListener("click", event => {
+        toggleSidebar();
     });
 }
 

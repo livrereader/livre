@@ -13,12 +13,14 @@
             <div id="titleWrapper">
                 <div id="title"></div> 
             </div>
-            <i id="menu-button" class="fa fa-bars"></i>
-            <div id="table-of-contents">
-                <p class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</p>
+            <div id="sidebar">
+                <div id="table-of-contents"></div>
             </div>
             <div id="reader">
+                <div class="gutter" id="left-gutter">
+                <i id="menu-button" class="fa fa-bars"></i>
                 <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
+                </div>
                 <div id="book">
                     <div id="start-page">
                         <p class="no-book-message" onclick="loadBookDialog();">Open a new book (Ctrl-O)</p>
@@ -31,7 +33,9 @@
                         </div>
                     </div>
                 </div>
-                <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
+                <div class="gutter" id="right-gutter">
+                    <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
+                </div>
             </div>
             <div id="find">
                 <input id="findInput" type="text" placeholder="&#xf002;" disabled/>
