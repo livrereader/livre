@@ -21,6 +21,7 @@ const buildResultListItem = function(result, Book, backBuffer, forwardBuffer) {
 
 const buildFindResults = function(results, Book, backBuffer, forwardBuffer) {
     const $resultsList = document.createElement("ul");
+    $resultsList.id = "findResults"
     for (let i in results) {
         const result = results[i];
         const $result = buildResultListItem(

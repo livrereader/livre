@@ -132,11 +132,11 @@ html {
     font-size: 1.2rem;
 }
 
-#table-of-contents ul {
+#table-of-contents, #table-of-contents ul {
     list-style-type: none;
 }
 
-#table-of-contents ul.toc {
+#table-of-contents.toc {
     padding-left: 0;
     margin-top: 0;
 }
@@ -165,7 +165,7 @@ html {
     border-left: 1px solid #CCC;
 }
 
-#find input {
+#findInput {
     font-family: "FontAwesome", "Open Sans";
     line-height: 2;
     font-size: 1.2rem;
@@ -174,7 +174,7 @@ html {
     box-sizing: border-box;
 }
 
-#find input:focus {
+#findInput:focus {
     outline: none;
 }
 
@@ -184,7 +184,7 @@ html {
     font-size: 1.2rem;
 }
 
-#findResults ul {
+#findResults, #findResults ul {
     list-style-type: none;
     padding: 0;
     line-height: 1.5;

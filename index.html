@@ -14,12 +14,13 @@
                 <div id="title"></div> 
             </div>
             <div id="sidebar">
-                <div id="table-of-contents"></div>
+                <input id="findInput" type="text" placeholder="&#xf002;" disabled/>
+                <div id="sidebar-contents"></div>
             </div>
             <div id="reader">
                 <div class="gutter" id="left-gutter">
-                <i id="menu-button" class="fa fa-bars"></i>
-                <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
+                    <i id="menu-button" class="fa fa-bars"></i>
+                    <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
                 </div>
                 <div id="book">
                     <div id="start-page">
@@ -36,10 +37,6 @@
                 <div class="gutter" id="right-gutter">
                     <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
                 </div>
-            </div>
-            <div id="find">
-                <input id="findInput" type="text" placeholder="&#xf002;" disabled/>
-                <div id="findResults"</div>
             </div>
         </div>
         <script type="text/javascript" src="app.js"></script>

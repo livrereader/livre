@@ -12,6 +12,7 @@ let persistedData;
 let persistInterval;
 let backBuffer = [];
 let forwardBuffer = [];
+let tableOfContents = "<h2>No table of contents available</h2>";
 
 const win = remote.getCurrentWindow();
 
@@ -112,13 +113,11 @@ const loadBook = function(bookPath) {
             return Book.getToc();
         })
         .then(toc => {
-            const $tocEl = document.getElementById("table-of-contents");
-            if (!toc || toc.length === 0) {
-                $tocEl.innerHTML = "<h2>No table of contents available.</h2>";
-            } else {
-                $tocEl.innerHTML = "";
-                $tocList = tocBuilder(toc, Book, backBuffer, forwardBuffer);
-                $tocEl.appendChild($tocList);
+            const $sidebarContents = document.getElementById("sidebar-contents");
+            if (toc && toc.length > 0) {
+                $sidebarContents.innerHTML = "";
+                tableOfContents = tocBuilder(toc, Book, backBuffer, forwardBuffer);
+                $sidebarContents.appendChild(tableOfContents);
             }
         })
         .then(() => {
@@ -172,44 +171,31 @@ const prevPage = function() {
     Book.prevPage();
 };
 
-const toggleFind = function() {
-    const $find = document.getElementById("find");
-    if ($find.style.display == "none" || $find.style.display == "") {
-        $find.style.display = "inline";
-    } else {
-        const $findResults = document.getElementById("findResults");
-        const $findInput = document.getElementById("findInput");
-        $findResults.innerHTML = "";
-        $findInput.value = "";
-        $find.style.display = "none";
-    }
-};
-
 function setupEventListeners() {
     const $findInput = document.getElementById("findInput");
-    const $findResults = document.getElementById("findResults");
+    const $sidebarContents = document.getElementById("sidebar-contents");
     $findInput.addEventListener("input", event => {
-        $findResults.innerHTML = "";
+        $sidebarContents.innerHTML = "";
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
         this.timeoutId = setTimeout(() => {
             const query = $findInput.value;
             if (query === "") {
+                $sidebarContents.appendChild(tableOfContents);
                 return;
             }
             ipcRenderer.send('find', {
                 bookPath: Book.settings.bookPath,
                 query: query
             });
-            $findResults.innerHTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>'
+            $sidebarContents.innerHTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>'
         }, 150);
     });
     ipcRenderer.on('findResults', (event, data) => {
-        console.log(data);
-        $findResults.innerHTML = "";
+        $sidebarContents.innerHTML = "";
         $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
-        $findResults.appendChild($resultsList);
+        $sidebarContents.appendChild($resultsList);
     });
 
     const $menuButton = document.getElementById("menu-button");
