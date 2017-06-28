@@ -165,6 +165,19 @@ html {
     border-left: 1px solid #CCC;
 }
 
+#clearFind {
+    display: none;
+    position: relative;
+    font-size: 1.6rem;
+    bottom: 32px;
+    left: 300px;
+    color: #BBB;
+}
+
+#clearFind:hover {
+    color: #777;
+}
+
 #findInput {
     font-family: "FontAwesome", "Open Sans";
     line-height: 2;

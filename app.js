@@ -171,6 +171,16 @@ const prevPage = function() {
     Book.prevPage();
 };
 
+const showClearFind = function() {
+    const $clearFind = document.getElementById("clearFind");
+    $clearFind.style.display = "inline-block";
+}
+
+const hideClearFind = function() {
+    const $clearFind = document.getElementById("clearFind");
+    $clearFind.style.display = "none";
+}
+
 function setupEventListeners() {
     const $findInput = document.getElementById("findInput");
     const $sidebarContents = document.getElementById("sidebar-contents");
@@ -185,6 +195,7 @@ function setupEventListeners() {
                 $sidebarContents.appendChild(tableOfContents);
                 return;
             }
+            showClearFind();
             ipcRenderer.send('find', {
                 bookPath: Book.settings.bookPath,
                 query: query
@@ -201,6 +212,13 @@ function setupEventListeners() {
     const $menuButton = document.getElementById("menu-button");
     $menuButton.addEventListener("click", event => {
         toggleSidebar();
+    });
+
+    const $clearFind = document.getElementById("clearFind");
+    $clearFind.addEventListener("click", event => {
+        $findInput.value = "";
+        $findInput.dispatchEvent(new Event("input"));
+        hideClearFind();
     });
 }
 
