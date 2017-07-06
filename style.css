@@ -18,6 +18,23 @@
        url('./fonts/open-sans-v13-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #BBB;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
 html {
     cursor: default;
     font-family: 'Open Sans', sans-serif;
