@@ -125,11 +125,21 @@ html {
     width: 350px;
     min-width: 350px;
     height: 100%;
-    overflow-y: scroll;
-    overflow-x: wrap;
     padding-right: 0.5em;
     border-right: 1px solid #CCC;
     font-size: 1.2rem;
+}
+
+#sidebar-contents {
+    clear: both;
+    margin-top: 0.5em;
+    max-height: 93%;
+    overflow-y: scroll;
+    overflow-wrap: normal;
+}
+
+#sidebar-contents .menuList, #sidebar-contents .menuListItem {
+    max-width: 100%;
 }
 
 #table-of-contents, #table-of-contents ul {
@@ -167,10 +177,11 @@ html {
 
 #clearFind {
     display: none;
+    float: right;
     position: relative;
     font-size: 1.6rem;
     bottom: 32px;
-    left: 300px;
+    right: 16px;
     color: #BBB;
 }
 
@@ -197,23 +208,24 @@ html {
     font-size: 1.2rem;
 }
 
-#findResults, #findResults ul {
+.menuList, .menuList ul {
+    margin: 0;
     list-style-type: none;
     padding: 0;
     line-height: 1.5;
 }
 
-#findResults li {
+.menuList li {
     border-bottom: 1px solid #777;
 }
 
-#findResults .findResultLocation {
+.menuItemFooter {
     padding-top: 1.5em;
     font-size: 0.9rem;
     color: #777;
 }
 
-#findResults .findResultExcerpt:hover {
+.clickable:hover {
     color: #777;
 }
 
