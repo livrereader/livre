@@ -1,12 +1,33 @@
-const menuItem = function(body, footer, title, onclick) {
-    if (!body || !typeof body === 'string') {
+const withClasses = require('./withClasses');
+
+const menuItem = function(options) {
+    const {
+        body,
+        title,
+        footer,
+        onclick,
+        classList
+    } = options;
+
+    if (!body || (!typeof body === 'string' && !body instanceof Node)) {
         throw new Error(`Invalid menu item body: ${body}`);
     }
     if (onclick && !typeof onclick === 'function') {
         throw new Error(`${onclick} is not a function`);
     }
-    const $item = document.createElement('div');
+    if (classList && !Array.isArray(classList)) {
+        throw new Error(`${classList} is not a list`);
+    }
+
+    const $bodyContents = body instanceof Node
+          ? body
+          : document.createTextNode(body);
+
+    let $item = document.createElement('div');
     $item.classList = 'menuItem';
+    if (classList) {
+        item = withClasses($item, classList);
+    }
 
     if (onclick) {
         $item.onclick = onclick;
@@ -24,8 +45,7 @@ const menuItem = function(body, footer, title, onclick) {
 
     const $body = document.createElement('span');
     $body.classList = 'menuItemBody';
-    const $bodyText = document.createTextNode(body);
-    $body.appendChild($bodyText);
+    $body.appendChild($bodyContents);
     $item.appendChild($body);
 
     if (footer && typeof footer === 'string') {

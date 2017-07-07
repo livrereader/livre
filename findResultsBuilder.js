@@ -4,14 +4,23 @@ const menuList = require('./menuList');
 const buildFindResults = function(results, Book, backBuffer, forwardBuffer) {
     const resultItems = results.map(result => {
         const location = Book.locations.locationFromCfi(result.cfi);
-        return menuItem(result.excerpt.trim(), `Location: ${location}`, null, event => {
-            event.stopPropagation();
-            backBuffer.push(Book.renderer.currentLocationCfi);
-            forwardBuffer = [];
-            Book.goto(result.cfi);
+        return menuItem({
+            body: result.excerpt.trim(),
+            footer: `Location: ${location}`,
+            onclick: event => {
+                event.stopPropagation();
+                backBuffer.push(Book.renderer.currentLocationCfi);
+                forwardBuffer = [];
+                Book.goto(result.cfi);
+            }
         });
     });
-    return menuList(resultItems);
+    return menuList({
+        items: resultItems,
+        itemClassList: [
+            'bottomBorder'
+        ]
+    });
 };
 
 module.exports = buildFindResults;
