@@ -149,9 +149,9 @@ html {
 #sidebar-contents {
     clear: both;
     margin-top: 0.5em;
-    max-height: 93%;
+    max-height: 96%;
     overflow-y: scroll;
-    overflow-wrap: normal;
+    overflow-x: hidden;
 }
 
 #sidebar-contents .menuList, #sidebar-contents .menuListItem {
@@ -248,6 +248,7 @@ html {
 .findLoading {
     text-align: center;
     padding-top: 1.5em;
+    height: 100px;
 }
 
 .findLoading i {

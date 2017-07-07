@@ -23,9 +23,9 @@ const init = function() {
         .appendChild(recentlyOpenedBuilder(persistedData, loadBook));
 
     // Ensure correct body height
-    document.body.style.height = win.getSize()[1] - 80 + "px";
+    document.body.style.height = win.getSize()[1] - 45 + "px";
     win.on("resize", () => {
-        document.body.style.height = win.getSize()[1] - 80 + "px";
+        document.body.style.height = win.getSize()[1] - 45 + "px";
     });
 
     // Set up event listeners
@@ -219,6 +219,11 @@ function setupEventListeners() {
         $findInput.value = "";
         $findInput.dispatchEvent(new Event("input"));
         hideClearFind();
+    });
+
+    // TODO this is janky - it shouldn't be necessary
+    $sidebarContents.addEventListener("scroll", event => {
+        $sidebarContents.scrollLeft = 0;
     });
 }
 
