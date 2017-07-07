@@ -1,18 +1,21 @@
+const menuItem = require('./menuItem');
+const menuList = require('./menuList');
+
 const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
-    const $listItem = document.createElement("li");
-
-    const $stylingSpan = document.createElement("span");
-    const listItemContent = document.createTextNode(tocItem.label.trim());
-    $stylingSpan.appendChild(listItemContent);
-
-    $listItem.appendChild($stylingSpan);
-
-    $listItem.onclick = function(event) {
-        event.stopPropagation();
-        backBuffer.push(Book.renderer.currentLocationCfi);
-        forwardBuffer = [];
-        Book.goto(tocItem.href);
-    };
+    const location = Book.locations.locationFromCfi(tocItem.cfi);
+    const body = tocItem.subItems && tocItem.subitems.length > 0
+          ? 'TODO'
+          : tocItem.label.trim();
+    return menuItem({
+        body: body,
+        footer: `Location: ${location}`,
+        onclick: event => {
+            event.stopPropagation();
+            backBuffer.push(Book.renderer.currentLocationCfi);
+            forwardBuffer = [];
+            Book.goto(tocItem.href);
+        }
+    });
 
     if (tocItem.subitems && tocItem.subitems.length > 0) {
         const $subList = document.createElement("ul");
@@ -28,11 +31,17 @@ const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
         }
         $listItem.appendChild($subList);
     }
-
-    return $listItem;
 };
 
 module.exports = function(toc, Book, backBuffer, forwardBuffer) {
+    const tocItems = toc.map(tocItem => buildTocListItem(tocItem, Book, backBuffer, forwardBuffer));
+
+    return menuList({
+        items: tocItems,
+        id: 'table-of-contents',
+        classList: [ 'toc' ]
+    });
+
     const $tocList = document.createElement("ul");
     $tocList.id = "table-of-contents";
     $tocList.classList = "toc";
