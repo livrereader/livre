@@ -23,9 +23,10 @@ const init = function() {
         .appendChild(recentlyOpenedBuilder(persistedData, loadBook));
 
     // Ensure correct body height
-    document.body.style.height = win.getSize()[1] - 45 + "px";
+    const SIZE_ADJUSTMENT_FACTOR = 25;
+    document.body.style.height = win.getSize()[1] - (win.getSize()[1]/SIZE_ADJUSTMENT_FACTOR) + "px";
     win.on("resize", () => {
-        document.body.style.height = win.getSize()[1] - 45 + "px";
+        document.body.style.height = win.getSize()[1] - (win.getSize()[1]/SIZE_ADJUSTMENT_FACTOR) + "px";
     });
 
     // Set up event listeners
