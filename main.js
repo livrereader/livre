@@ -161,11 +161,11 @@ function createWindow(bookData) {
         win = null;
     });
 
-    createBackgroundWindow(win);
+    createBackgroundWindow();
 }
 
-function createBackgroundWindow(mainWindow) {
-    backgroundWin = new BrowserWindow({ show: false, parent: win });
+function createBackgroundWindow() {
+    backgroundWin = new BrowserWindow({ show: false });
 
     backgroundWin.loadURL(
         url.format({
