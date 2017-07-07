@@ -110,8 +110,10 @@ const loadBook = function(bookPath) {
             persistInterval = window.setInterval(() => {
                 ipcRenderer.send("persistData", persistedData);
             }, 30000);
-
-            return Book.getToc();
+        })
+        .then(() => Book.getToc())
+        .then(toc => {
+            return Book.locations.generate().then(() => toc);
         })
         .then(toc => {
             const $sidebarContents = document.getElementById("sidebar-contents");
@@ -124,9 +126,6 @@ const loadBook = function(bookPath) {
         .then(() => {
             const $findInput = document.getElementById("findInput");
             $findInput.removeAttribute("disabled");
-        })
-        .then(() => {
-            Book.locations.generate();
         })
         .catch(err => {
             alert("Something went wrong!\n" + err.stack);
