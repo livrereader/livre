@@ -143,6 +143,7 @@ html {
     min-width: 350px;
     height: 100%;
     padding-right: 0.5em;
+    padding-bottom: 0.5em;
     border-right: 1px solid #CCC;
     font-size: 1.2rem;
 }
@@ -159,13 +160,30 @@ html {
     max-width: 100%;
 }
 
+.menuListItem {
+    margin-left: 1.6em;
+}
+
 #table-of-contents, #table-of-contents ul {
     list-style-type: none;
+}
+
+#table-of-contents:last-child {
+    margin-bottom: 0.5em;
+}
+
+#find-results-list:last-child {
+    margin-bottom: 1em;
 }
 
 #table-of-contents.toc {
     padding-left: 0;
     margin-top: 0;
+    margin-left: 0;
+}
+
+.toc > li {
+    margin-left: 0;
 }
 
 #table-of-contents li {
