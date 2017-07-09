@@ -1,5 +1,5 @@
-const menuItem = require('./menuItem');
-const menuList = require('./menuList');
+const menuItem = require("./menuItem");
+const menuList = require("./menuList");
 
 const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
     const location = Book.locations.locationFromCfi(tocItem.cfi);
@@ -16,9 +16,9 @@ const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
         footer: `Location: ${location}`,
         onclick: onclick
     });
-    
+
     const parentItem = () => {
-        const $wrapper = document.createElement('li');
+        const $wrapper = document.createElement("li");
         const $item = $tocItem;
         const $subitem = menuList({
             items: tocItem.subitems.map(subitem =>
@@ -37,8 +37,10 @@ const buildTocListItem = function(tocItem, Book, backBuffer, forwardBuffer) {
 
 module.exports = function(toc, Book, backBuffer, forwardBuffer) {
     return menuList({
-        items: toc.map(tocItem => buildTocListItem(tocItem, Book, backBuffer, forwardBuffer)),
-        id: 'table-of-contents',
-        classList: [ 'toc' ]
+        items: toc.map(tocItem =>
+            buildTocListItem(tocItem, Book, backBuffer, forwardBuffer)
+        ),
+        id: "table-of-contents",
+        classList: ["toc"]
     });
 };

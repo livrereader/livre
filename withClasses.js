@@ -10,7 +10,7 @@ const withClasses = function($el, classList) {
 
     for (let i in classList) {
         const cls = classList[i];
-        if (!typeof cls === 'string') {
+        if (!typeof cls === "string") {
             throw new Error(`${cls} is not a string`);
         }
         $clone.classList.add(cls);

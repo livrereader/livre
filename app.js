@@ -5,7 +5,8 @@ const recentlyOpenedBuilder = require("./recentlyOpenedBuilder");
 const findResultsBuilder = require("./findResultsBuilder");
 
 const DEFAULT_FONT_SIZE = 1.2;
-const LOADING_HTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>';
+const LOADING_HTML =
+    '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>';
 
 let Book;
 let id;
@@ -25,9 +26,11 @@ const init = function() {
 
     // Ensure correct body height
     const SIZE_ADJUSTMENT_FACTOR = 25;
-    document.body.style.height = win.getSize()[1] - (win.getSize()[1]/SIZE_ADJUSTMENT_FACTOR) + "px";
+    document.body.style.height =
+        win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + "px";
     win.on("resize", () => {
-        document.body.style.height = win.getSize()[1] - (win.getSize()[1]/SIZE_ADJUSTMENT_FACTOR) + "px";
+        document.body.style.height =
+            win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + "px";
     });
 
     // Set up event listeners
@@ -57,7 +60,9 @@ const loadBook = function(bookPath) {
             if (metadata.bookTitle) {
                 const $title = document.getElementById("title");
                 $title.innerHTML = "";
-                const title = metadata.creator ? metadata.bookTitle + " - " + metadata.creator : metadata.bookTitle;
+                const title = metadata.creator
+                    ? metadata.bookTitle + " - " + metadata.creator
+                    : metadata.bookTitle;
                 const titleContent = document.createTextNode(title);
                 $title.appendChild(titleContent);
             }
@@ -113,18 +118,27 @@ const loadBook = function(bookPath) {
             }, 30000);
         })
         .then(() => {
-            const $sidebarContents = document.getElementById("sidebar-contents");
+            const $sidebarContents = document.getElementById(
+                "sidebar-contents"
+            );
             $sidebarContents.innerHTML = "";
             $sidebarContents.innerHTML = LOADING_HTML;
-        }) 
+        })
         .then(() => Book.getToc())
         .then(toc => {
             return Book.locations.generate().then(() => toc);
         })
         .then(toc => {
-            const $sidebarContents = document.getElementById("sidebar-contents");
+            const $sidebarContents = document.getElementById(
+                "sidebar-contents"
+            );
             if (toc && toc.length > 0) {
-                tableOfContents = tocBuilder(toc, Book, backBuffer, forwardBuffer);
+                tableOfContents = tocBuilder(
+                    toc,
+                    Book,
+                    backBuffer,
+                    forwardBuffer
+                );
                 $sidebarContents.innerHTML = "";
                 $sidebarContents.appendChild(tableOfContents);
             }
@@ -180,12 +194,12 @@ const prevPage = function() {
 const showClearFind = function() {
     const $clearFind = document.getElementById("clearFind");
     $clearFind.style.display = "inline-block";
-}
+};
 
 const hideClearFind = function() {
     const $clearFind = document.getElementById("clearFind");
     $clearFind.style.display = "none";
-}
+};
 
 function setupEventListeners() {
     const $findInput = document.getElementById("findInput");
@@ -202,16 +216,21 @@ function setupEventListeners() {
                 return;
             }
             showClearFind();
-            ipcRenderer.send('find', {
+            ipcRenderer.send("find", {
                 bookPath: Book.settings.bookPath,
                 query: query
             });
             $sidebarContents.innerHTML = LOADING_HTML;
         }, 150);
     });
-    ipcRenderer.on('findResults', (event, data) => {
+    ipcRenderer.on("findResults", (event, data) => {
         $sidebarContents.innerHTML = "";
-        $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
+        $resultsList = findResultsBuilder(
+            data,
+            Book,
+            backBuffer,
+            forwardBuffer
+        );
         $sidebarContents.appendChild($resultsList);
     });
 

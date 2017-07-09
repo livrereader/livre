@@ -1,5 +1,5 @@
-const menuItem = require('./menuItem');
-const menuList = require('./menuList');
+const menuItem = require("./menuItem");
+const menuList = require("./menuList");
 
 const buildFindResults = function(results, Book, backBuffer, forwardBuffer) {
     const resultItems = results.map(result => {
@@ -17,10 +17,8 @@ const buildFindResults = function(results, Book, backBuffer, forwardBuffer) {
     });
     return menuList({
         items: resultItems,
-        id: 'find-results-list',
-        itemClassList: [
-            'bottomBorder'
-        ]
+        id: "find-results-list",
+        itemClassList: ["bottomBorder"]
     });
 };
 

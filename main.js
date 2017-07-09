@@ -1,5 +1,12 @@
 const electron = require("electron");
-const { app, BrowserWindow, Menu, ipcMain, dialog, powerSaveBlocker } = electron;
+const {
+    app,
+    BrowserWindow,
+    Menu,
+    ipcMain,
+    dialog,
+    powerSaveBlocker
+} = electron;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
