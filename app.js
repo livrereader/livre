@@ -112,6 +112,11 @@ const loadBook = function(bookPath) {
                 ipcRenderer.send("persistData", persistedData);
             }, 30000);
         })
+        .then(() => {
+            const $sidebarContents = document.getElementById("sidebar-contents");
+            $sidebarContents.innerHTML = "";
+            $sidebarContents.innerHTML = LOADING_HTML;
+        }) 
         .then(() => Book.getToc())
         .then(toc => {
             return Book.locations.generate().then(() => toc);
@@ -119,8 +124,8 @@ const loadBook = function(bookPath) {
         .then(toc => {
             const $sidebarContents = document.getElementById("sidebar-contents");
             if (toc && toc.length > 0) {
-                $sidebarContents.innerHTML = "";
                 tableOfContents = tocBuilder(toc, Book, backBuffer, forwardBuffer);
+                $sidebarContents.innerHTML = "";
                 $sidebarContents.appendChild(tableOfContents);
             }
         })
