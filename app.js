@@ -5,6 +5,7 @@ const recentlyOpenedBuilder = require("./recentlyOpenedBuilder");
 const findResultsBuilder = require("./findResultsBuilder");
 
 const DEFAULT_FONT_SIZE = 1.2;
+const LOADING_HTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>';
 
 let Book;
 let id;
@@ -200,7 +201,7 @@ function setupEventListeners() {
                 bookPath: Book.settings.bookPath,
                 query: query
             });
-            $sidebarContents.innerHTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>'
+            $sidebarContents.innerHTML = LOADING_HTML;
         }, 150);
     });
     ipcRenderer.on('findResults', (event, data) => {
