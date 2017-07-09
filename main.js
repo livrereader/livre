@@ -89,17 +89,13 @@ const menuTemplate = [
             },
             {
                 role: "togglefullscreen"
-            }
-        ]
-    },
-    {
-        label: "invisible",
-        visible: false,
-        submenu: [
+            },
             {
                 accelerator: "Escape",
-                click: menuFunctions.escape
+                click: menuFunctions.escape,
+                visible: false            
             }
+ 
         ]
     }
 ];
