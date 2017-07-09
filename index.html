@@ -13,11 +13,18 @@
             <div id="titleWrapper">
                 <div id="title"></div> 
             </div>
-            <div id="table-of-contents">
-                <p class="no-book-message" onclick="loadBookDialog();">Open a book (Ctrl-O)...</p>
+            <div id="sidebar">
+                <span id="findInputWrapper">
+                    <input id="findInput" type="text" placeholder="&#xf002;" disabled/>
+                    <i id="clearFind" class="fa fa-times" aria-hidden="true"></i>
+                </span>
+                <div id="sidebar-contents"></div>
             </div>
             <div id="reader">
-                <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
+                <div class="gutter" id="left-gutter">
+                    <i id="menu-button" class="fa fa-bars"></i>
+                    <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
+                </div>
                 <div id="book">
                     <div id="start-page">
                         <p class="no-book-message" onclick="loadBookDialog();">Open a new book (Ctrl-O)</p>
@@ -30,11 +37,9 @@
                         </div>
                     </div>
                 </div>
-                <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
-            </div>
-            <div id="find">
-                <input id="findInput" type="text" placeholder="&#xf002;" disabled/>
-                <div id="findResults"</div>
+                <div class="gutter" id="right-gutter">
+                    <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="app.js"></script>

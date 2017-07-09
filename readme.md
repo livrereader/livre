@@ -18,6 +18,8 @@
 ```
 $ git clone https://github.com/livrereader/livre
 $ cd livre
+$ git submodule init
+$ git submodule update
 $ npm install
 $ # To start the Electron process locally:
 $ npm start
@@ -41,7 +43,9 @@ The build process has been tested on Linux but not Windows or macOS. If you run 
 
 `alt+right arrow`: Forward
 
-`ctrl+t`: Toggle table of contents
+`ctrl+t`: Open table of contents
+
+`escape`: Close sidebar
 
 `ctrl+f`: Find in eBook
 
@@ -54,3 +58,4 @@ The build process has been tested on Linux but not Windows or macOS. If you run 
 `ctrl+q`: Quit
 
 `ctrl+shift+i`: Toggle Chrome developer tools
+

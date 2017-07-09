@@ -1,5 +1,12 @@
 const electron = require("electron");
-const { app, BrowserWindow, Menu, ipcMain, dialog, powerSaveBlocker } = electron;
+const {
+    app,
+    BrowserWindow,
+    Menu,
+    ipcMain,
+    dialog,
+    powerSaveBlocker
+} = electron;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
@@ -84,6 +91,16 @@ const menuTemplate = [
                 role: "togglefullscreen"
             }
         ]
+    },
+    {
+        label: "invisible",
+        visible: false,
+        submenu: [
+            {
+                accelerator: "Escape",
+                click: menuFunctions.escape
+            }
+        ]
     }
 ];
 
@@ -161,11 +178,11 @@ function createWindow(bookData) {
         win = null;
     });
 
-    createBackgroundWindow(win);
+    createBackgroundWindow();
 }
 
-function createBackgroundWindow(mainWindow) {
-    backgroundWin = new BrowserWindow({ show: false, parent: win });
+function createBackgroundWindow() {
+    backgroundWin = new BrowserWindow({ show: false });
 
     backgroundWin.loadURL(
         url.format({

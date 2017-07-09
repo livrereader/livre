@@ -39,5 +39,8 @@ module.exports = {
     },
     find: function(menuItem, browserWindow) {
         browserWindow.webContents.send("find");
+    },
+    escape: function(menuItem, browserWindow) {
+        browserWindow.webContents.send("escape");
     }
 };

@@ -18,6 +18,22 @@
        url('./fonts/open-sans-v13-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #BBB;
+}
+
 html {
     cursor: default;
     font-family: 'Open Sans', sans-serif;
@@ -26,6 +42,7 @@ html {
 
 #app {
     display: flex;
+    overflow: hidden;
     width: 100%;
     height: 100%;
     max-height: 100%;
@@ -75,6 +92,19 @@ html {
     color: #000;
 }
 
+#menu-button {
+    position: relative;
+    font-size: 2.8rem;
+    height: 40px;
+    top: 40px;
+    left: 40px;
+    color: #BBB;
+}
+
+#menu-button:hover {
+    color: #777;
+}
+
 .no-book-message {
     margin: auto;
     color: #292929;
@@ -107,25 +137,53 @@ html {
     max-width: 50%;
 }
 
-#table-of-contents {
+#sidebar {
     display: none;
     width: 350px;
     min-width: 350px;
     height: 100%;
-    overflow-y: scroll;
-    overflow-x: wrap;
     padding-right: 0.5em;
+    padding-bottom: 0.5em;
     border-right: 1px solid #CCC;
     font-size: 1.2rem;
 }
 
-#table-of-contents ul {
+#sidebar-contents {
+    clear: both;
+    margin-top: 0.5em;
+    max-height: 96%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#sidebar-contents .menuList, #sidebar-contents .menuListItem {
+    max-width: 100%;
+}
+
+.menuListItem {
+    margin-left: 1.6em;
+}
+
+#table-of-contents, #table-of-contents ul {
     list-style-type: none;
 }
 
-#table-of-contents ul.toc {
+#table-of-contents:last-child {
+    margin-bottom: 0.5em;
+}
+
+#find-results-list:last-child {
+    margin-bottom: 1em;
+}
+
+#table-of-contents.toc {
     padding-left: 0;
     margin-top: 0;
+    margin-left: 0;
+}
+
+.toc > li {
+    margin-left: 0;
 }
 
 #table-of-contents li {
@@ -152,7 +210,21 @@ html {
     border-left: 1px solid #CCC;
 }
 
-#find input {
+#clearFind {
+    display: none;
+    float: right;
+    position: relative;
+    font-size: 1.6rem;
+    bottom: 32px;
+    right: 16px;
+    color: #BBB;
+}
+
+#clearFind:hover {
+    color: #777;
+}
+
+#findInput {
     font-family: "FontAwesome", "Open Sans";
     line-height: 2;
     font-size: 1.2rem;
@@ -161,7 +233,7 @@ html {
     box-sizing: border-box;
 }
 
-#find input:focus {
+#findInput:focus {
     outline: none;
 }
 
@@ -171,39 +243,45 @@ html {
     font-size: 1.2rem;
 }
 
-#findResults ul {
+.menuList, .menuList ul {
+    margin: 0;
     list-style-type: none;
     padding: 0;
     line-height: 1.5;
 }
 
-#findResults li {
+.bottomBorder {
     border-bottom: 1px solid #777;
 }
 
-#findResults .findResultLocation {
+.menuItemFooter {
     padding-top: 1.5em;
     font-size: 0.9rem;
     color: #777;
 }
 
-#findResults .findResultExcerpt:hover {
+.clickable:hover {
     color: #777;
 }
 
 .findLoading {
     text-align: center;
     padding-top: 1.5em;
+    height: 100px;
 }
 
 .findLoading i {
     margin: auto;
 }
 
+.gutter {
+    display: flex;
+}
+
 .arrow {
     margin: auto;
     font-size: 40px;
-    color: #E2E2E2;
+    color: #BBB;
 }
 
 .arrow:hover {
@@ -215,7 +293,6 @@ html {
 }
 
 #page-left {
-    margin-left: 40px;
 }
 
 #page-right {

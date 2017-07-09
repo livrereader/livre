@@ -5,6 +5,8 @@ const recentlyOpenedBuilder = require("./recentlyOpenedBuilder");
 const findResultsBuilder = require("./findResultsBuilder");
 
 const DEFAULT_FONT_SIZE = 1.2;
+const LOADING_HTML =
+    '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>';
 
 let Book;
 let id;
@@ -12,6 +14,9 @@ let persistedData;
 let persistInterval;
 let backBuffer = [];
 let forwardBuffer = [];
+
+let tableOfContents = document.createElement('h2');
+tableOfContents.appendChild(document.createTextNode("No table of contents available"));
 
 const win = remote.getCurrentWindow();
 
@@ -22,9 +27,12 @@ const init = function() {
         .appendChild(recentlyOpenedBuilder(persistedData, loadBook));
 
     // Ensure correct body height
-    document.body.style.height = win.getSize()[1] - 50 + "px";
+    const SIZE_ADJUSTMENT_FACTOR = 25;
+    document.body.style.height =
+        win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + "px";
     win.on("resize", () => {
-        document.body.style.height = win.getSize()[1] - 50 + "px";
+        document.body.style.height =
+            win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + "px";
     });
 
     // Set up event listeners
@@ -54,7 +62,9 @@ const loadBook = function(bookPath) {
             if (metadata.bookTitle) {
                 const $title = document.getElementById("title");
                 $title.innerHTML = "";
-                const title = metadata.creator ? metadata.bookTitle + " - " + metadata.creator : metadata.bookTitle;
+                const title = metadata.creator
+                    ? metadata.bookTitle + " - " + metadata.creator
+                    : metadata.bookTitle;
                 const titleContent = document.createTextNode(title);
                 $title.appendChild(titleContent);
             }
@@ -108,25 +118,36 @@ const loadBook = function(bookPath) {
             persistInterval = window.setInterval(() => {
                 ipcRenderer.send("persistData", persistedData);
             }, 30000);
-
-            return Book.getToc();
+        })
+        .then(() => {
+            const $sidebarContents = document.getElementById(
+                "sidebar-contents"
+            );
+            $sidebarContents.innerHTML = "";
+            $sidebarContents.innerHTML = LOADING_HTML;
+        })
+        .then(() => Book.getToc())
+        .then(toc => {
+            return Book.locations.generate().then(() => toc);
         })
         .then(toc => {
-            const $tocEl = document.getElementById("table-of-contents");
-            if (!toc || toc.length === 0) {
-                $tocEl.innerHTML = "<h2>No table of contents available.</h2>";
-            } else {
-                $tocEl.innerHTML = "";
-                $tocList = tocBuilder(toc, Book, backBuffer, forwardBuffer);
-                $tocEl.appendChild($tocList);
+            const $sidebarContents = document.getElementById(
+                "sidebar-contents"
+            );
+            if (toc && toc.length > 0) {
+                tableOfContents = tocBuilder(
+                    toc,
+                    Book,
+                    backBuffer,
+                    forwardBuffer
+                );
+                $sidebarContents.innerHTML = "";
+                $sidebarContents.appendChild(tableOfContents);
             }
         })
         .then(() => {
             const $findInput = document.getElementById("findInput");
             $findInput.removeAttribute("disabled");
-        })
-        .then(() => {
-            Book.locations.generate();
         })
         .catch(err => {
             alert("Something went wrong!\n" + err.stack);
@@ -151,12 +172,22 @@ const loadBookDialog = function() {
     });
 };
 
-const toggleToc = function() {
-    const $tocEl = document.getElementById("table-of-contents");
-    if ($tocEl.style.display === "none" || $tocEl.style.display === "") {
-        $tocEl.style.display = "inline";
+const showSidebar = function() {
+    const $tocEl = document.getElementById("sidebar");
+    $tocEl.style.display = "inline";
+};
+
+const hideSidebar = function() {
+    const $tocEl = document.getElementById("sidebar");
+    $tocEl.style.display = "none";
+};
+
+const toggleSidebar = function() {
+    const $tocEl = document.getElementById("sidebar");
+    if ($tocEl.style.display === 'none' || $tocEl.style.display === '') {
+        showSidebar();
     } else {
-        $tocEl.style.display = "none";
+        hideSidebar();
     }
 };
 
@@ -172,44 +203,64 @@ const prevPage = function() {
     Book.prevPage();
 };
 
-const toggleFind = function() {
-    const $find = document.getElementById("find");
-    if ($find.style.display == "none" || $find.style.display == "") {
-        $find.style.display = "inline";
-    } else {
-        const $findResults = document.getElementById("findResults");
-        const $findInput = document.getElementById("findInput");
-        $findResults.innerHTML = "";
-        $findInput.value = "";
-        $find.style.display = "none";
-    }
+const showClearFind = function() {
+    const $clearFind = document.getElementById("clearFind");
+    $clearFind.style.display = "inline-block";
+};
+
+const hideClearFind = function() {
+    const $clearFind = document.getElementById("clearFind");
+    $clearFind.style.display = "none";
 };
 
 function setupEventListeners() {
     const $findInput = document.getElementById("findInput");
-    const $findResults = document.getElementById("findResults");
+    const $sidebarContents = document.getElementById("sidebar-contents");
     $findInput.addEventListener("input", event => {
-        $findResults.innerHTML = "";
+        $sidebarContents.innerHTML = "";
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
         this.timeoutId = setTimeout(() => {
             const query = $findInput.value;
             if (query === "") {
+                $sidebarContents.appendChild(tableOfContents);
                 return;
             }
-            ipcRenderer.send('find', {
+            showClearFind();
+            ipcRenderer.send("find", {
                 bookPath: Book.settings.bookPath,
                 query: query
             });
-            $findResults.innerHTML = '<div class="findLoading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span></div>'
+            $sidebarContents.innerHTML = LOADING_HTML;
         }, 150);
     });
-    ipcRenderer.on('findResults', (event, data) => {
-        console.log(data);
-        $findResults.innerHTML = "";
-        $resultsList = findResultsBuilder(data, Book, backBuffer, forwardBuffer);
-        $findResults.appendChild($resultsList);
+    ipcRenderer.on("findResults", (event, data) => {
+        $sidebarContents.innerHTML = "";
+        $resultsList = findResultsBuilder(
+            data,
+            Book,
+            backBuffer,
+            forwardBuffer
+        );
+        $sidebarContents.appendChild($resultsList);
+    });
+
+    const $menuButton = document.getElementById("menu-button");
+    $menuButton.addEventListener("click", event => {
+        toggleSidebar();
+    });
+
+    const $clearFind = document.getElementById("clearFind");
+    $clearFind.addEventListener("click", event => {
+        $findInput.value = "";
+        $findInput.dispatchEvent(new Event("input"));
+        hideClearFind();
+    });
+
+    // TODO this is janky - it shouldn't be necessary
+    $sidebarContents.addEventListener("scroll", event => {
+        $sidebarContents.scrollLeft = 0;
     });
 }
 
@@ -252,7 +303,12 @@ ipcRenderer.on("restoreFont", () => {
 });
 
 ipcRenderer.on("toggleToc", () => {
-    toggleToc();
+    const sidebarContents = document.getElementById('sidebar-contents');
+    const $findInput = document.getElementById('findInput');
+    $findInput.value = "";
+    sidebarContents.innerHTML = "";
+    sidebarContents.appendChild(tableOfContents);
+    showSidebar();
 });
 
 ipcRenderer.on("back", () => {
@@ -282,5 +338,11 @@ ipcRenderer.on("forward", () => {
 });
 
 ipcRenderer.on("find", () => {
-    toggleFind();
+    showSidebar();
+    const $findInput = document.getElementById('findInput');
+    $findInput.focus();
+});
+
+ipcRenderer.on("escape", () => {
+    hideSidebar();
 });
