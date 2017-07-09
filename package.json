@@ -2,14 +2,14 @@
   "name": "livre",
   "version": "1.0.1",
   "description": "An ebook reader written with Electron",
-  "main": "main.js",
+  "main": "js/main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-packager . Livre --icon icon --out ./dist --overwrite",
     "prepare": "git submodule init && git submodule update && (cd ./lib/epub.js; npm install)"
   },
   "repository": {
-    "url": "git@github.com:jdormit/livre.git",
+    "url": "https://github.com:livrereader/livre.git",
     "type": "git"
   },
   "author": "Jeremy Dormitzer <jeremy.dormitzer@gmail.com>",
