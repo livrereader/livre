@@ -14,7 +14,9 @@ let persistedData;
 let persistInterval;
 let backBuffer = [];
 let forwardBuffer = [];
-let tableOfContents = "<h2>No table of contents available</h2>";
+
+let tableOfContents = document.createElement('h2');
+tableOfContents.appendChild(document.createTextNode("No table of contents available"));
 
 const win = remote.getCurrentWindow();
 
@@ -170,12 +172,22 @@ const loadBookDialog = function() {
     });
 };
 
+const showSidebar = function() {
+    const $tocEl = document.getElementById("sidebar");
+    $tocEl.style.display = "inline";
+};
+
+const hideSidebar = function() {
+    const $tocEl = document.getElementById("sidebar");
+    $tocEl.style.display = "none";
+};
+
 const toggleSidebar = function() {
     const $tocEl = document.getElementById("sidebar");
-    if ($tocEl.style.display === "none" || $tocEl.style.display === "") {
-        $tocEl.style.display = "inline";
+    if ($tocEl.style.display === 'none' || $tocEl.style.display === '') {
+        showSidebar();
     } else {
-        $tocEl.style.display = "none";
+        hideSidebar();
     }
 };
 
@@ -291,7 +303,12 @@ ipcRenderer.on("restoreFont", () => {
 });
 
 ipcRenderer.on("toggleToc", () => {
-    toggleToc();
+    const sidebarContents = document.getElementById('sidebar-contents');
+    const $findInput = document.getElementById('findInput');
+    $findInput.value = "";
+    sidebarContents.innerHTML = "";
+    sidebarContents.appendChild(tableOfContents);
+    showSidebar();
 });
 
 ipcRenderer.on("back", () => {
@@ -321,5 +338,11 @@ ipcRenderer.on("forward", () => {
 });
 
 ipcRenderer.on("find", () => {
-    toggleFind();
+    showSidebar();
+    const $findInput = document.getElementById('findInput');
+    $findInput.focus();
+});
+
+ipcRenderer.on("escape", () => {
+    hideSidebar();
 });
