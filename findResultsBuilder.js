@@ -17,6 +17,7 @@ const buildFindResults = function(results, Book, backBuffer, forwardBuffer) {
     });
     return menuList({
         items: resultItems,
+        id: 'find-results-list',
         itemClassList: [
             'bottomBorder'
         ]
