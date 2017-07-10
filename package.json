@@ -5,8 +5,8 @@
   "main": "js/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . Livre --icon icon --out ./dist --overwrite",
-    "prepare": "git submodule init && git submodule update && (cd ./lib/epub.js; npm install)"
+    "build": "electron-packager . Livre --icon ./images/icon --out ./dist --overwrite",
+    "prepare": "git submodule init && git submodule update && (cd ./js/epub.js; npm install)"
   },
   "repository": {
     "url": "https://github.com:livrereader/livre.git",
