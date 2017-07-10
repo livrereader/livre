@@ -1,6 +1,8 @@
 const { ipcRenderer, remote } = require("electron");
 const { dialog } = remote;
 const path = require("path");
+
+// Relative imports in the Electron renderer process are janky for some reason
 const tocBuilder = require(path.resolve("./js/lib/tocBuilder"));
 const recentlyOpenedBuilder = require(path.resolve("./js/lib/recentlyOpenedBuilder"));
 const findResultsBuilder = require(path.resolve("./js/lib/findResultsBuilder"));
