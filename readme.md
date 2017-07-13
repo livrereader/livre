@@ -24,7 +24,7 @@ $ npm install
 $ # To start the Electron process locally:
 $ npm start
 $ # Or to build a binary for your platform in ./dist:
-$ npm run build
+$ npm run package
 ```
 
 The compiled binary or the `start` script can be passed a path to a valid `.epub` file; if no file is passed than the app will open to the start screen and books can be opened from within the app.
