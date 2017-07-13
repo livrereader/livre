@@ -4,8 +4,9 @@
   "description": "An ebook reader written with Electron",
   "main": "js/main.js",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-packager . Livre --icon ./images/icon --out ./dist --overwrite",
+    "start": "npm run build && electron .",
+    "package": "npm run build && electron-packager . Livre --icon ./images/icon --out ./out --overwrite",
+    "build": "webpack",
     "prepare": "git submodule init && git submodule update && (cd ./js/epub.js; npm install)"
   },
   "repository": {
@@ -15,7 +16,8 @@
   "author": "Jeremy Dormitzer <jeremy.dormitzer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron-packager": "^8.3.0"
+    "electron-packager": "^8.3.0",
+    "webpack": "^3.2.0"
   },
   "dependencies": {
     "electron": "^1.6.10",
