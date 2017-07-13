@@ -23,11 +23,11 @@
             <div id="reader">
                 <div class="gutter" id="left-gutter">
                     <i id="menu-button" class="fa fa-bars"></i>
-                    <i id="page-left" class="fa fa-chevron-left arrow" onclick="prevPage();"></i>
+                    <i id="page-left" class="fa fa-chevron-left arrow" onclick="Livre.prevPage();"></i>
                 </div>
                 <div id="book">
                     <div id="start-page">
-                        <p class="no-book-message" onclick="loadBookDialog();">Open a new book (Ctrl-O)</p>
+                        <p class="no-book-message" onclick="Livre.loadBookDialog();">Open a new book (Ctrl-O)</p>
                         <div id="recent-books">
                             <hr>
                             <p id="recent-books-label">Recent books:</p>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="gutter" id="right-gutter">
-                    <i id="page-right" class="fa fa-chevron-right arrow" onclick="nextPage();"></i>
+                    <i id="page-right" class="fa fa-chevron-right arrow" onclick="Livre.nextPage();"></i>
                 </div>
             </div>
         </div>

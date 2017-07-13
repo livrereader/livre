@@ -166,7 +166,7 @@ const openDialogOptions = {
     properties: ["openFile"]
 };
 
-const loadBookDialog = function() {
+const loadBookDialog = exports.loadBookDialog = function() {
     dialog.showOpenDialog(win, openDialogOptions, bookPaths => {
         if (bookPaths) {
             loadBook(bookPaths[0]);
@@ -193,13 +193,13 @@ const toggleSidebar = function() {
     }
 };
 
-const nextPage = function() {
+const nextPage = exports.nextPage = function() {
     backBuffer.push(Book.renderer.currentLocationCfi);
     forwardBuffer = [];
     Book.nextPage();
 };
 
-const prevPage = function() {
+const prevPage = exports.prevPage = function() {
     backBuffer.push(Book.renderer.currentLocationCfi);
     forwardBuffer = [];
     Book.prevPage();
