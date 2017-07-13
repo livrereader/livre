@@ -136,6 +136,7 @@ function createWindow(bookData) {
             bookPath = process.argv[2];
         }
         if (bookPath) {
+            bookPath = path.resolve(bookPath);
             fs.access(bookPath, function(err) {
                 if (err) {
                     dialog.showMessageBox(win, {
