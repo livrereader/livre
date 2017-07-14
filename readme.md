@@ -21,7 +21,7 @@ $ cd livre
 $ npm install
 $ # To start the Electron process locally:
 $ npm start
-$ # Or to build a binary for your platform in ./dist:
+$ # Or to build a binary for your platform in ./out:
 $ npm run package
 ```
 
