@@ -32,6 +32,7 @@ The compiled binary or the `start` script can be passed a path to a valid `.epub
 The build process has been tested on Linux but not Windows or macOS. If you run into problems, please [submit an issue](https://github.com/livrereader/livre/issues).
 
 ## Keyboard shortcuts:
+Note: macOS uses `cmd` instead of `ctrl`.
 
 `ctrl+o`: Open an eBook
 
