@@ -1,4 +1,5 @@
 const { dialog } = require("electron");
+const openNewWindow = require('./openNewWindow');
 
 const openDialogOptions = {
     filters: [{ name: "eBooks", extensions: ["epub"] }],
@@ -6,12 +7,19 @@ const openDialogOptions = {
 };
 
 module.exports = {
-    open: function(menuItem, browserWindow) {
-        dialog.showOpenDialog(browserWindow, openDialogOptions, bookPaths => {
-            if (bookPaths) {
-                browserWindow.webContents.send("loadBook", bookPaths[0]);
-            }
-        });
+    open: function(callback) {
+        return function(menuItem, browserWindow) {
+            dialog.showOpenDialog(browserWindow, openDialogOptions, bookPaths => {
+                if (bookPaths) {
+                    if (browserWindow) {
+                        browserWindow.webContents.send("loadBook", bookPaths[0]);
+                        callback(browserWindow);
+                    } else {
+                        openNewWindow(bookPaths[0], callback);
+                    }
+                }
+            });
+        }
     },
     nextPage: function(menuItem, browserWindow) {
         browserWindow.webContents.send("nextPage");

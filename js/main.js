@@ -12,6 +12,7 @@ const url = require("url");
 const fs = require("fs");
 const menuFunctions = require("./lib/menuFunctions");
 const loadPersistedData = require("./lib/dataPersistance");
+const config = require('./lib/config');
 
 let win;
 
@@ -24,7 +25,9 @@ const menuTemplate = [
             {
                 label: "Open",
                 accelerator: "CommandOrControl+O",
-                click: menuFunctions.open
+                click: menuFunctions.open(maybeNewWindow => {
+                    win = maybeNewWindow;
+                })
             },
             {
                 role: "quit"
@@ -93,7 +96,7 @@ const menuTemplate = [
             {
                 accelerator: "Escape",
                 click: menuFunctions.escape,
-                visible: false            
+                visible: false
             }
  
         ]
@@ -104,7 +107,7 @@ function createWindow(bookData) {
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
-    const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+    const { width, height } = config();
 
     const iconPath = path.join(__dirname, "..", "images", "icon.png");
 
