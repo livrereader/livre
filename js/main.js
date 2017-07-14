@@ -59,27 +59,27 @@ const menuTemplate = [
             },
             {
                 label: "Find in Chapter",
-                accelerator: "Control+f",
+                accelerator: "CommandOrControl+f",
                 click: menuFunctions.find
             },
             {
                 label: "Toggle Table of Contents",
-                accelerator: "Control+t",
+                accelerator: "CommandOrControl+t",
                 click: menuFunctions.toggleToc
             },
             {
                 label: "Increase Font Size",
-                accelerator: "Control+=",
+                accelerator: "CommandOrControl+=",
                 click: menuFunctions.increaseFontSize
             },
             {
                 label: "Decrease Font Size",
-                accelerator: "Control+-",
+                accelerator: "CommandOrControl+-",
                 click: menuFunctions.decreaseFontSize
             },
             {
                 label: "Restore Default Font Size",
-                accelerator: "Control+0",
+                accelerator: "CommandOrControl+0",
                 click: menuFunctions.restoreDefaultFontSize
             }
         ]
