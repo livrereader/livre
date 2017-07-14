@@ -8,5 +8,5 @@ module.exports = () => {
     return {
         width: electron.screen.getPrimaryDisplay().workAreaSize.width,
         height: electron.screen.getPrimaryDisplay().workAreaSize.height
-    }
+    };
 };

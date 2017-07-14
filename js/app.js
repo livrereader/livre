@@ -1,10 +1,10 @@
-const { ipcRenderer, remote } = require("electron");
+const { ipcRenderer, remote } = require('electron');
 const { dialog } = remote;
-const path = require("path");
+const path = require('path');
 
-const tocBuilder = require("./lib/tocBuilder");
-const recentlyOpenedBuilder = require("./lib/recentlyOpenedBuilder");
-const findResultsBuilder = require("./lib/findResultsBuilder");
+const tocBuilder = require('./lib/tocBuilder');
+const recentlyOpenedBuilder = require('./lib/recentlyOpenedBuilder');
+const findResultsBuilder = require('./lib/findResultsBuilder');
 
 const DEFAULT_FONT_SIZE = 1.2;
 const LOADING_HTML =
@@ -18,30 +18,32 @@ let backBuffer = [];
 let forwardBuffer = [];
 
 let tableOfContents = document.createElement('h2');
-tableOfContents.appendChild(document.createTextNode("No table of contents available"));
+tableOfContents.appendChild(
+    document.createTextNode('No table of contents available')
+);
 
 const win = remote.getCurrentWindow();
 
 const init = function() {
     // Build 'recently opened' list
     document
-        .getElementById("recently-opened")
+        .getElementById('recently-opened')
         .appendChild(recentlyOpenedBuilder(persistedData, loadBook));
 
     // Ensure correct body height
     const SIZE_ADJUSTMENT_FACTOR = 25;
     document.body.style.height =
-        win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + "px";
-    win.on("resize", () => {
+        win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + 'px';
+    win.on('resize', () => {
         document.body.style.height =
-            win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + "px";
+            win.getSize()[1] - win.getSize()[1] / SIZE_ADJUSTMENT_FACTOR + 'px';
     });
 
     // Set up event listeners
     setupEventListeners();
 
     // Show #book
-    document.getElementById("book").style.display = "flex";
+    document.getElementById('book').style.display = 'flex';
 };
 
 const loadBook = function(bookPath) {
@@ -50,22 +52,22 @@ const loadBook = function(bookPath) {
     }
     Book = ePub({
         styles: {
-            "font-size": DEFAULT_FONT_SIZE + "rem"
+            'font-size': DEFAULT_FONT_SIZE + 'rem'
         }
     });
 
-    const $book = document.getElementById("book");
-    $book.innerHTML = "";
+    const $book = document.getElementById('book');
+    $book.innerHTML = '';
 
     Promise.resolve(Book.open(bookPath))
         .then(() => Book.getMetadata())
         .then(metadata => {
             // Fill in title and author div
             if (metadata.bookTitle) {
-                const $title = document.getElementById("title");
-                $title.innerHTML = "";
+                const $title = document.getElementById('title');
+                $title.innerHTML = '';
                 const title = metadata.creator
-                    ? metadata.bookTitle + " - " + metadata.creator
+                    ? metadata.bookTitle + ' - ' + metadata.creator
                     : metadata.bookTitle;
                 const titleContent = document.createTextNode(title);
                 $title.appendChild(titleContent);
@@ -99,16 +101,16 @@ const loadBook = function(bookPath) {
                     persistedData[id].currentLocation;
             }
         })
-        .then(() => Book.renderTo("book"))
+        .then(() => Book.renderTo('book'))
         .then(() => {
-            ipcRenderer.send("persistData", persistedData);
+            ipcRenderer.send('persistData', persistedData);
 
-            Book.on("renderer:locationChanged", function(locationCfi) {
+            Book.on('renderer:locationChanged', function(locationCfi) {
                 persistedData[id].currentLocation = locationCfi;
-                ipcRenderer.send("persistData", persistedData);
+                ipcRenderer.send('persistData', persistedData);
             });
 
-            Book.on("book:linkClicked", function(href) {
+            Book.on('book:linkClicked', function(href) {
                 backBuffer.push(Book.renderer.currentLocationCfi);
                 forwardBuffer = [];
             });
@@ -118,14 +120,14 @@ const loadBook = function(bookPath) {
             }
 
             persistInterval = window.setInterval(() => {
-                ipcRenderer.send("persistData", persistedData);
+                ipcRenderer.send('persistData', persistedData);
             }, 30000);
         })
         .then(() => {
             const $sidebarContents = document.getElementById(
-                "sidebar-contents"
+                'sidebar-contents'
             );
-            $sidebarContents.innerHTML = "";
+            $sidebarContents.innerHTML = '';
             $sidebarContents.innerHTML = LOADING_HTML;
         })
         .then(() => Book.getToc())
@@ -134,7 +136,7 @@ const loadBook = function(bookPath) {
         })
         .then(toc => {
             const $sidebarContents = document.getElementById(
-                "sidebar-contents"
+                'sidebar-contents'
             );
             if (toc && toc.length > 0) {
                 tableOfContents = tocBuilder(
@@ -143,49 +145,49 @@ const loadBook = function(bookPath) {
                     backBuffer,
                     forwardBuffer
                 );
-                $sidebarContents.innerHTML = "";
+                $sidebarContents.innerHTML = '';
                 $sidebarContents.appendChild(tableOfContents);
             }
         })
         .then(() => {
-            const $findInput = document.getElementById("findInput");
-            $findInput.removeAttribute("disabled");
+            const $findInput = document.getElementById('findInput');
+            $findInput.removeAttribute('disabled');
         })
         .catch(err => {
-            alert("Something went wrong!\n" + err.stack);
+            alert('Something went wrong!\n' + err.stack);
             if (Book && Book.destroy) {
                 Book.destroy();
             }
-            $book.innerHTML = "";
+            $book.innerHTML = '';
             init();
         });
 };
 
 const openDialogOptions = {
-    filters: [{ name: "eBooks", extensions: ["epub"] }],
-    properties: ["openFile"]
+    filters: [{ name: 'eBooks', extensions: ['epub'] }],
+    properties: ['openFile']
 };
 
-const loadBookDialog = exports.loadBookDialog = function() {
+const loadBookDialog = (exports.loadBookDialog = function() {
     dialog.showOpenDialog(win, openDialogOptions, bookPaths => {
         if (bookPaths) {
             loadBook(bookPaths[0]);
         }
     });
-};
+});
 
 const showSidebar = function() {
-    const $tocEl = document.getElementById("sidebar");
-    $tocEl.style.display = "inline";
+    const $tocEl = document.getElementById('sidebar');
+    $tocEl.style.display = 'inline';
 };
 
 const hideSidebar = function() {
-    const $tocEl = document.getElementById("sidebar");
-    $tocEl.style.display = "none";
+    const $tocEl = document.getElementById('sidebar');
+    $tocEl.style.display = 'none';
 };
 
 const toggleSidebar = function() {
-    const $tocEl = document.getElementById("sidebar");
+    const $tocEl = document.getElementById('sidebar');
     if ($tocEl.style.display === 'none' || $tocEl.style.display === '') {
         showSidebar();
     } else {
@@ -193,52 +195,52 @@ const toggleSidebar = function() {
     }
 };
 
-const nextPage = exports.nextPage = function() {
+const nextPage = (exports.nextPage = function() {
     backBuffer.push(Book.renderer.currentLocationCfi);
     forwardBuffer = [];
     Book.nextPage();
-};
+});
 
-const prevPage = exports.prevPage = function() {
+const prevPage = (exports.prevPage = function() {
     backBuffer.push(Book.renderer.currentLocationCfi);
     forwardBuffer = [];
     Book.prevPage();
-};
+});
 
 const showClearFind = function() {
-    const $clearFind = document.getElementById("clearFind");
-    $clearFind.style.display = "inline-block";
+    const $clearFind = document.getElementById('clearFind');
+    $clearFind.style.display = 'inline-block';
 };
 
 const hideClearFind = function() {
-    const $clearFind = document.getElementById("clearFind");
-    $clearFind.style.display = "none";
+    const $clearFind = document.getElementById('clearFind');
+    $clearFind.style.display = 'none';
 };
 
 function setupEventListeners() {
-    const $findInput = document.getElementById("findInput");
-    const $sidebarContents = document.getElementById("sidebar-contents");
-    $findInput.addEventListener("input", event => {
-        $sidebarContents.innerHTML = "";
+    const $findInput = document.getElementById('findInput');
+    const $sidebarContents = document.getElementById('sidebar-contents');
+    $findInput.addEventListener('input', event => {
+        $sidebarContents.innerHTML = '';
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
         this.timeoutId = setTimeout(() => {
             const query = $findInput.value;
-            if (query === "") {
+            if (query === '') {
                 $sidebarContents.appendChild(tableOfContents);
                 return;
             }
             showClearFind();
-            ipcRenderer.send("find", {
+            ipcRenderer.send('find', {
                 bookPath: Book.settings.bookPath,
                 query: query
             });
             $sidebarContents.innerHTML = LOADING_HTML;
         }, 150);
     });
-    ipcRenderer.on("findResults", (event, data) => {
-        $sidebarContents.innerHTML = "";
+    ipcRenderer.on('findResults', (event, data) => {
+        $sidebarContents.innerHTML = '';
         $resultsList = findResultsBuilder(
             data,
             Book,
@@ -248,72 +250,72 @@ function setupEventListeners() {
         $sidebarContents.appendChild($resultsList);
     });
 
-    const $menuButton = document.getElementById("menu-button");
-    $menuButton.addEventListener("click", event => {
+    const $menuButton = document.getElementById('menu-button');
+    $menuButton.addEventListener('click', event => {
         toggleSidebar();
     });
 
-    const $clearFind = document.getElementById("clearFind");
-    $clearFind.addEventListener("click", event => {
-        $findInput.value = "";
-        $findInput.dispatchEvent(new Event("input"));
+    const $clearFind = document.getElementById('clearFind');
+    $clearFind.addEventListener('click', event => {
+        $findInput.value = '';
+        $findInput.dispatchEvent(new Event('input'));
         hideClearFind();
     });
 
     // TODO this is janky - it shouldn't be necessary
-    $sidebarContents.addEventListener("scroll", event => {
+    $sidebarContents.addEventListener('scroll', event => {
         $sidebarContents.scrollLeft = 0;
     });
 }
 
 let currentFontSize = DEFAULT_FONT_SIZE;
 
-ipcRenderer.on("loadPersistedData", (event, data) => {
+ipcRenderer.on('loadPersistedData', (event, data) => {
     persistedData = data;
     init();
 });
 
-ipcRenderer.on("initNoData", () => {
+ipcRenderer.on('initNoData', () => {
     init();
 });
 
-ipcRenderer.on("loadBook", (event, bookPath) => {
+ipcRenderer.on('loadBook', (event, bookPath) => {
     loadBook(bookPath);
 });
 
-ipcRenderer.on("prevPage", () => {
+ipcRenderer.on('prevPage', () => {
     prevPage();
 });
 
-ipcRenderer.on("nextPage", () => {
+ipcRenderer.on('nextPage', () => {
     nextPage();
 });
 
-ipcRenderer.on("increaseFont", () => {
+ipcRenderer.on('increaseFont', () => {
     currentFontSize /= 0.75;
-    Book.setStyle("font-size", currentFontSize + "rem");
+    Book.setStyle('font-size', currentFontSize + 'rem');
 });
 
-ipcRenderer.on("decreaseFont", () => {
+ipcRenderer.on('decreaseFont', () => {
     currentFontSize *= 0.75;
-    Book.setStyle("font-size", currentFontSize + "rem");
+    Book.setStyle('font-size', currentFontSize + 'rem');
 });
 
-ipcRenderer.on("restoreFont", () => {
+ipcRenderer.on('restoreFont', () => {
     currentFontSize = DEFAULT_FONT_SIZE;
-    Book.setStyle("font-size", currentFontSize + "rem");
+    Book.setStyle('font-size', currentFontSize + 'rem');
 });
 
-ipcRenderer.on("toggleToc", () => {
+ipcRenderer.on('toggleToc', () => {
     const sidebarContents = document.getElementById('sidebar-contents');
     const $findInput = document.getElementById('findInput');
-    $findInput.value = "";
-    sidebarContents.innerHTML = "";
+    $findInput.value = '';
+    sidebarContents.innerHTML = '';
     sidebarContents.appendChild(tableOfContents);
     showSidebar();
 });
 
-ipcRenderer.on("back", () => {
+ipcRenderer.on('back', () => {
     backLocation = backBuffer.pop();
     if (backLocation) {
         if (
@@ -326,7 +328,7 @@ ipcRenderer.on("back", () => {
     }
 });
 
-ipcRenderer.on("forward", () => {
+ipcRenderer.on('forward', () => {
     forwardLocation = forwardBuffer.pop();
     if (forwardLocation) {
         if (
@@ -339,12 +341,12 @@ ipcRenderer.on("forward", () => {
     }
 });
 
-ipcRenderer.on("find", () => {
+ipcRenderer.on('find', () => {
     showSidebar();
     const $findInput = document.getElementById('findInput');
     $findInput.focus();
 });
 
-ipcRenderer.on("escape", () => {
+ipcRenderer.on('escape', () => {
     hideSidebar();
 });

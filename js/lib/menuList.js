@@ -1,4 +1,4 @@
-const withClasses = require("./withClasses");
+const withClasses = require('./withClasses');
 
 const menuList = function(options) {
     const { items, id, onclick, classList, itemClassList } = options;
@@ -6,10 +6,10 @@ const menuList = function(options) {
     if (!items || !Array.isArray(items)) {
         throw new Error(`${items} is not a list`);
     }
-    if (id && !typeof id === "string") {
+    if (id && !typeof id === 'string') {
         throw new Error(`${id} is not a string`);
     }
-    if (onclick && !typeof onclick === "function") {
+    if (onclick && !typeof onclick === 'function') {
         throw new Error(`${onclick} is not a function`);
     }
     if (classList && !Array.isArray(classList)) {
@@ -19,8 +19,8 @@ const menuList = function(options) {
         throw new Error(`${itemClassList} is not a list`);
     }
 
-    let $list = document.createElement("ul");
-    $list.classList = "menuList";
+    let $list = document.createElement('ul');
+    $list.classList = 'menuList';
     if (id) {
         $list.id = id;
     }
@@ -32,13 +32,13 @@ const menuList = function(options) {
         if (!item instanceof Node) {
             throw new Error(`${item} is not a DOM node`);
         }
-        let $item = document.createElement("li");
-        $item.classList = "menuListItem";
+        let $item = document.createElement('li');
+        $item.classList = 'menuListItem';
         if (itemClassList) {
             $item = withClasses($item, itemClassList);
         }
         if (onclick) {
-            $item.classList.add("clickable");
+            $item.classList.add('clickable');
             $item.onclick = onclick;
         }
 

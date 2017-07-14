@@ -1,4 +1,4 @@
-const electron = require("electron");
+const electron = require('electron');
 const {
     app,
     BrowserWindow,
@@ -7,98 +7,97 @@ const {
     dialog,
     powerSaveBlocker
 } = electron;
-const path = require("path");
-const url = require("url");
-const fs = require("fs");
-const menuFunctions = require("./lib/menuFunctions");
-const loadPersistedData = require("./lib/dataPersistance");
+const path = require('path');
+const url = require('url');
+const fs = require('fs');
+const menuFunctions = require('./lib/menuFunctions');
+const loadPersistedData = require('./lib/dataPersistance');
 const config = require('./lib/config');
 
 let win;
 
-const DATA_FILE_PATH = path.join(app.getPath("userData"), "data.json");
+const DATA_FILE_PATH = path.join(app.getPath('userData'), 'data.json');
 
 const menuTemplate = [
     {
-        label: "File",
+        label: 'File',
         submenu: [
             {
-                label: "Open",
-                accelerator: "CommandOrControl+O",
+                label: 'Open',
+                accelerator: 'CommandOrControl+O',
                 click: menuFunctions.open(maybeNewWindow => {
                     win = maybeNewWindow;
                 })
             },
             {
-                role: "quit"
+                role: 'quit'
             }
         ]
     },
     {
-        label: "eBook",
+        label: 'eBook',
         submenu: [
             {
-                label: "Next Page",
-                accelerator: "Right",
+                label: 'Next Page',
+                accelerator: 'Right',
                 click: menuFunctions.nextPage
             },
             {
-                label: "Previous Page",
-                accelerator: "Left",
+                label: 'Previous Page',
+                accelerator: 'Left',
                 click: menuFunctions.previousPage
             },
             {
-                label: "Back",
-                accelerator: "Alt+Left",
+                label: 'Back',
+                accelerator: 'Alt+Left',
                 click: menuFunctions.back
             },
             {
-                label: "Forward",
-                accelerator: "Alt+Right",
+                label: 'Forward',
+                accelerator: 'Alt+Right',
                 click: menuFunctions.forward
             },
             {
-                label: "Find in Chapter",
-                accelerator: "CommandOrControl+f",
+                label: 'Find in Chapter',
+                accelerator: 'CommandOrControl+f',
                 click: menuFunctions.find
             },
             {
-                label: "Toggle Table of Contents",
-                accelerator: "CommandOrControl+t",
+                label: 'Toggle Table of Contents',
+                accelerator: 'CommandOrControl+t',
                 click: menuFunctions.toggleToc
             },
             {
-                label: "Increase Font Size",
-                accelerator: "CommandOrControl+=",
+                label: 'Increase Font Size',
+                accelerator: 'CommandOrControl+=',
                 click: menuFunctions.increaseFontSize
             },
             {
-                label: "Decrease Font Size",
-                accelerator: "CommandOrControl+-",
+                label: 'Decrease Font Size',
+                accelerator: 'CommandOrControl+-',
                 click: menuFunctions.decreaseFontSize
             },
             {
-                label: "Restore Default Font Size",
-                accelerator: "CommandOrControl+0",
+                label: 'Restore Default Font Size',
+                accelerator: 'CommandOrControl+0',
                 click: menuFunctions.restoreDefaultFontSize
             }
         ]
     },
     {
-        label: "Window",
+        label: 'Window',
         submenu: [
             {
-                role: "toggledevtools"
+                role: 'toggledevtools'
             },
             {
-                role: "togglefullscreen"
+                role: 'togglefullscreen'
             },
             {
-                accelerator: "Escape",
+                accelerator: 'Escape',
                 click: menuFunctions.escape,
                 visible: false
             }
- 
         ]
     }
 ];
@@ -109,7 +108,7 @@ function createWindow(bookData) {
 
     const { width, height } = config();
 
-    const iconPath = path.join(__dirname, "..", "images", "icon.png");
+    const iconPath = path.join(__dirname, '..', 'images', 'icon.png');
 
     const windowOptions = {
         width: width,
@@ -121,8 +120,8 @@ function createWindow(bookData) {
 
     win.loadURL(
         url.format({
-            pathname: path.join(__dirname, "..", "html", "index.html"),
-            protocol: "file",
+            pathname: path.join(__dirname, '..', 'html', 'index.html'),
+            protocol: 'file',
             slashes: true
         })
     );
@@ -133,8 +132,8 @@ function createWindow(bookData) {
         let bookPath = process.argv[1];
         if (
             bookPath &&
-            typeof bookPath === "string" &&
-            path.extname(bookPath).toLowerCase() !== ".epub"
+            typeof bookPath === 'string' &&
+            path.extname(bookPath).toLowerCase() !== '.epub'
         ) {
             bookPath = process.argv[2];
         }
@@ -143,38 +142,38 @@ function createWindow(bookData) {
             fs.access(bookPath, function(err) {
                 if (err) {
                     dialog.showMessageBox(win, {
-                        type: "error",
-                        title: "Error loading book",
-                        message: "Unable to load file " + bookPath + ".",
-                        buttons: ["OK"]
+                        type: 'error',
+                        title: 'Error loading book',
+                        message: 'Unable to load file ' + bookPath + '.',
+                        buttons: ['OK']
                     });
-                } else if (path.extname(bookPath).toLowerCase() !== ".epub") {
+                } else if (path.extname(bookPath).toLowerCase() !== '.epub') {
                     dialog.showMessageBox(win, {
-                        type: "error",
-                        title: "Error loading book",
-                        message: bookPath + " is not a valid .epub file.",
-                        buttons: ["OK"]
+                        type: 'error',
+                        title: 'Error loading book',
+                        message: bookPath + ' is not a valid .epub file.',
+                        buttons: ['OK']
                     });
                 } else {
-                    win.webContents.send("loadBook", bookPath);
+                    win.webContents.send('loadBook', bookPath);
                 }
             });
         }
     };
 
     if (bookData) {
-        win.webContents.on("dom-ready", function() {
-            win.webContents.send("loadPersistedData", bookData);
+        win.webContents.on('dom-ready', function() {
+            win.webContents.send('loadPersistedData', bookData);
             parseArgv();
         });
     } else {
-        win.webContents.on("dom-ready", function() {
-            win.webContents.send("initNoData");
+        win.webContents.on('dom-ready', function() {
+            win.webContents.send('initNoData');
             parseArgv();
         });
     }
 
-    win.on("closed", () => {
+    win.on('closed', () => {
         win = null;
     });
 
@@ -186,28 +185,28 @@ function createBackgroundWindow() {
 
     backgroundWin.loadURL(
         url.format({
-            pathname: path.join(__dirname, "..", "html", "background.html"),
-            protocol: "file",
+            pathname: path.join(__dirname, '..', 'html', 'background.html'),
+            protocol: 'file',
             slashes: true
         })
     );
 
-    ipcMain.on("find", (event, data) => {
-        backgroundWin.webContents.send("find", data);
+    ipcMain.on('find', (event, data) => {
+        backgroundWin.webContents.send('find', data);
     });
 
-    ipcMain.on("findResults", (event, data) => {
-        win.webContents.send("findResults", data);
+    ipcMain.on('findResults', (event, data) => {
+        win.webContents.send('findResults', data);
     });
 }
 
 function init() {
     loadPersistedData(function(err, data) {
         if (err) {
-            if (err.code === "ENOENT") {
+            if (err.code === 'ENOENT') {
                 createWindow();
             } else if (err instanceof SyntaxError) {
-                console.error("Could not read config file: invalid syntax.");
+                console.error('Could not read config file: invalid syntax.');
                 createWindow();
             } else {
                 throw err;
@@ -216,9 +215,9 @@ function init() {
             createWindow(data);
         }
 
-        ipcMain.on("persistData", function(event, bookData) {
+        ipcMain.on('persistData', function(event, bookData) {
             const json = JSON.stringify(bookData);
-            fs.writeFile(DATA_FILE_PATH, json, "utf8", err => {
+            fs.writeFile(DATA_FILE_PATH, json, 'utf8', err => {
                 if (err) {
                     throw err;
                 }
@@ -227,18 +226,18 @@ function init() {
     });
 }
 
-const powerSaveId = powerSaveBlocker.start("prevent-display-sleep");
+const powerSaveId = powerSaveBlocker.start('prevent-display-sleep');
 
-app.on("ready", init);
+app.on('ready', init);
 
-app.on("windows-all-closed", () => {
+app.on('windows-all-closed', () => {
     powerSaveBlocker.stop(powerSaveId);
-    if (process.platform !== "darwin") {
+    if (process.platform !== 'darwin') {
         app.quit();
     }
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
     if (win === null) {
         init();
     }

@@ -1,54 +1,61 @@
-const { dialog } = require("electron");
+const { dialog } = require('electron');
 const openNewWindow = require('./openNewWindow');
 
 const openDialogOptions = {
-    filters: [{ name: "eBooks", extensions: ["epub"] }],
-    properties: ["openFile"]
+    filters: [{ name: 'eBooks', extensions: ['epub'] }],
+    properties: ['openFile']
 };
 
 module.exports = {
     open: function(callback) {
         return function(menuItem, browserWindow) {
-            dialog.showOpenDialog(browserWindow, openDialogOptions, bookPaths => {
-                if (bookPaths) {
-                    if (browserWindow) {
-                        browserWindow.webContents.send("loadBook", bookPaths[0]);
-                        callback(browserWindow);
-                    } else {
-                        openNewWindow(bookPaths[0], callback);
+            dialog.showOpenDialog(
+                browserWindow,
+                openDialogOptions,
+                bookPaths => {
+                    if (bookPaths) {
+                        if (browserWindow) {
+                            browserWindow.webContents.send(
+                                'loadBook',
+                                bookPaths[0]
+                            );
+                            callback(browserWindow);
+                        } else {
+                            openNewWindow(bookPaths[0], callback);
+                        }
                     }
                 }
-            });
-        }
+            );
+        };
     },
     nextPage: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("nextPage");
+        browserWindow.webContents.send('nextPage');
     },
     previousPage: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("prevPage");
+        browserWindow.webContents.send('prevPage');
     },
     increaseFontSize: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("increaseFont");
+        browserWindow.webContents.send('increaseFont');
     },
     decreaseFontSize: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("decreaseFont");
+        browserWindow.webContents.send('decreaseFont');
     },
     restoreDefaultFontSize: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("restoreFont");
+        browserWindow.webContents.send('restoreFont');
     },
     toggleToc: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("toggleToc");
+        browserWindow.webContents.send('toggleToc');
     },
     back: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("back");
+        browserWindow.webContents.send('back');
     },
     forward: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("forward");
+        browserWindow.webContents.send('forward');
     },
     find: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("find");
+        browserWindow.webContents.send('find');
     },
     escape: function(menuItem, browserWindow) {
-        browserWindow.webContents.send("escape");
+        browserWindow.webContents.send('escape');
     }
 };

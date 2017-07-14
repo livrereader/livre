@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const { app } = require("electron");
+const fs = require('fs');
+const path = require('path');
+const { app } = require('electron');
 
-const DATA_PATH = path.join(app.getPath("userData"), "data.json");
+const DATA_PATH = path.join(app.getPath('userData'), 'data.json');
 
 module.exports = function(callback) {
     fs.readFile(DATA_PATH, (err, data) => {

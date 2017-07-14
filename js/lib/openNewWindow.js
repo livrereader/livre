@@ -1,8 +1,5 @@
 const electron = require('electron');
-const {
-    BrowserWindow,
-    dialog
-} = electron;
+const { BrowserWindow, dialog } = electron;
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
@@ -64,7 +61,7 @@ module.exports = function(bookPath, callback) {
             if (err.code === 'ENOENT') {
                 callback(createWindow(null, bookPath));
             } else if (err instanceof SyntaxError) {
-                console.error("Could not read config file: invalid syntax.");
+                console.error('Could not read config file: invalid syntax.');
                 callback(createWindow(null, bookPath));
             } else {
                 throw err;
