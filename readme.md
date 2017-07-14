@@ -18,8 +18,6 @@
 ```
 $ git clone https://github.com/livrereader/livre
 $ cd livre
-$ git submodule init
-$ git submodule update
 $ npm install
 $ # To start the Electron process locally:
 $ npm start
