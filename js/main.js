@@ -99,6 +99,15 @@ const menuTemplate = [
                 visible: false
             }
         ]
+    },
+    {
+        label: 'Help',
+        submenu: [
+            {
+                label: 'Report an Issue',
+                click: menuFunctions.reportIssue
+            }
+        ]
     }
 ];
 

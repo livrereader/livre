@@ -1,5 +1,6 @@
-const { dialog } = require('electron');
+const { dialog, shell } = require('electron');
 const openNewWindow = require('./openNewWindow');
+const config = require('./config');
 
 const openDialogOptions = {
     filters: [{ name: 'eBooks', extensions: ['epub'] }],
@@ -57,5 +58,8 @@ module.exports = {
     },
     escape: function(menuItem, browserWindow) {
         browserWindow.webContents.send('escape');
+    },
+    reportIssue: function(menuItem, browserWindow) {
+        shell.openExternal(config().reportIssueUrl);
     }
 };
