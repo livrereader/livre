@@ -117,19 +117,16 @@ function createWindow(bookData) {
 
     const { width, height } = config();
 
-    const iconPath = path.join(__dirname, '..', 'images', 'icon.png');
-
     const windowOptions = {
         width: width,
-        height: height,
-        icon: iconPath
+        height: height
     };
 
     win = new BrowserWindow(windowOptions);
 
     win.loadURL(
         url.format({
-            pathname: path.join(__dirname, '..', 'html', 'index.html'),
+            pathname: path.join(__dirname, '..', '..', 'html', 'index.html'),
             protocol: 'file',
             slashes: true
         })
@@ -194,7 +191,7 @@ function createBackgroundWindow() {
 
     backgroundWin.loadURL(
         url.format({
-            pathname: path.join(__dirname, '..', 'html', 'background.html'),
+            pathname: path.join(__dirname, '..', '..', 'html', 'background.html'),
             protocol: 'file',
             slashes: true
         })

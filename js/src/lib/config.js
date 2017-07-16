@@ -2,7 +2,7 @@ const electron = require('electron');
 const { app } = electron;
 const url = require('url');
 const os = require('os');
-const { version } = require('../../package.json');
+const { version } = require('../../../package.json');
 
 const generateReportIssueUrl = () => {
     const osString = `${os.type()} ${os.arch()} ${os.release()}`;

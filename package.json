@@ -2,13 +2,19 @@
   "name": "livre",
   "version": "1.1.2",
   "description": "An ebook reader written with Electron",
-  "main": "js/main.js",
+  "main": "js/src/main.js",
   "scripts": {
     "start": "npm run build && electron .",
-    "package": "npm run build && electron-packager . Livre --icon ./images/icon --out ./out --overwrite",
+    "package": "electron-builder",
     "build": "webpack",
     "prepare": "git submodule init && git submodule update && (cd ./js/lib/epub.js; npm install)",
     "prettify": "prettier --tab-width 4 --single-quote --write"
+  },
+  "build": {
+    "appId": "com.livrereader.livre",
+    "mac": {
+      "category": "public.app-category.utilities"
+    }
   },
   "repository": {
     "url": "https://github.com:livrereader/livre.git",
@@ -17,12 +23,13 @@
   "author": "Jeremy Dormitzer <jeremy.dormitzer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "electron": "^1.6.10",
+    "electron-builder": "^19.16.0",
     "electron-packager": "^8.3.0",
     "prettier": "^1.5.2",
     "webpack": "^3.2.0"
   },
   "dependencies": {
-    "electron": "^1.6.10",
     "jszip": "^3.1.3",
     "localforage": "^1.5.0",
     "rsvp": "^3.5.0"

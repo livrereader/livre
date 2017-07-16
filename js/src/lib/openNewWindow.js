@@ -18,7 +18,7 @@ const createWindow = function(bookData, bookPath) {
 
     win.loadURL(
         url.format({
-            pathname: path.join(__dirname, '..', '..', 'html', 'index.html'),
+            pathname: path.join(__dirname, '..', '..', '..', 'html', 'index.html'),
             protocol: 'file',
             slashes: true
         })
