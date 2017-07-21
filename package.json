@@ -7,7 +7,7 @@
     "start": "npm run build && electron .",
     "package": "electron-builder",
     "build": "webpack",
-    "prepare": "git submodule init && git submodule update && (cd ./js/lib/epub.js; npm install)",
+    "prepare": "git submodule init && git submodule update && (cd ./js/src/lib/epub.js; npm install)",
     "prettify": "prettier --tab-width 4 --single-quote --write"
   },
   "build": {
